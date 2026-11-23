@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="csrf-token" content="{{ csrf_token() }}">
-  <title>PNF Posture Lab - AI 體態快篩與處方推薦</title>
+  <title>PNF Posture Lab - 全身多維度 AI 體態快篩與處方推薦</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <script>
@@ -22,14 +22,14 @@
 <body class="bg-[#0B0D14] text-white p-6 min-h-screen">
 
   <!-- 頂部導覽列 -->
-  <div class="max-w-5xl mx-auto mb-6 flex justify-between items-center border-b border-gray-800 pb-4">
+  <div class="max-w-6xl mx-auto mb-6 flex justify-between items-center border-b border-gray-800 pb-4">
     <div class="flex items-center gap-3">
       <div class="w-9 h-9 rounded-xl bg-goldAccent/20 border border-goldAccent/40 flex items-center justify-center text-goldAccent">
         <i class="fa-solid fa-person-rays"></i>
       </div>
       <div>
-        <h1 class="text-base font-bold text-white">PNF Posture Lab · AI 體態實驗室</h1>
-        <p class="text-xs text-gray-400">支援即時攝影機快篩與靜態側面照片分析</p>
+        <h1 class="text-base font-bold text-white">PNF Posture Lab · 全身 AI 體態實驗室</h1>
+        <p class="text-xs text-gray-400">多維度關節角度快篩（頭頸、肩胸、骨盆、膝關節、左右對稱度）與 PNF 處方推薦</p>
       </div>
     </div>
     <a href="/" class="px-3.5 py-2 rounded-xl bg-cardDark hover:bg-gray-800 border border-gray-700 text-xs font-semibold text-gray-300 transition flex items-center gap-2">
@@ -37,7 +37,7 @@
     </a>
   </div>
 
-  <div class="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6 text-white">
+  <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6 text-white">
   
     <!-- 左側：即時 AI 視覺辨識與照片上傳區 -->
     <div class="lg:col-span-2 bg-cardDark p-4 rounded-2xl border border-gray-800">
@@ -48,12 +48,12 @@
             <i class="fa-solid fa-video"></i> 即時攝影機
           </button>
           <label for="photo-upload" id="btn-source-photo" class="cursor-pointer px-3 py-1.5 rounded-lg text-xs font-bold bg-gray-800 hover:bg-gray-700 text-gray-300 border border-gray-700 transition flex items-center gap-1.5">
-            <i class="fa-solid fa-image"></i> 上傳側面照片檢測
+            <i class="fa-solid fa-image"></i> 上傳全身照片檢測
           </label>
           <input type="file" id="photo-upload" accept="image/*" class="hidden">
         </div>
 
-        <span id="angle-readout" class="font-mono text-xs text-gray-400">頭肩角: --° | 骨盆角: --°</span>
+        <span id="angle-readout" class="font-mono text-[11px] text-gray-400">頭肩: --° | 骨盆: --° | 膝角: --°</span>
       </div>
 
       <div class="relative w-full aspect-video bg-black rounded-xl overflow-hidden border border-gray-800 flex items-center justify-center">
@@ -76,42 +76,45 @@
       </div>
     </div>
 
-    <!-- 右側：診斷結果、問題識別與 PNF 頁面導流 -->
+    <!-- 右側：多維度診斷結果、全部問題清單與 PNF 頁面導流 -->
     <div class="bg-cardDark p-6 rounded-2xl border border-gray-800 flex flex-col justify-between">
       <div>
         <div class="flex items-center justify-between mb-4">
           <h2 class="text-lg font-bold flex items-center gap-2">
-            <i class="fa-solid fa-robot text-indigo-400"></i> AI 體態分析控制台
+            <i class="fa-solid fa-robot text-indigo-400"></i> AI 全身姿態診斷
           </h2>
           <span id="mode-badge" class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30">
-            體態快篩
+            全身快篩
           </span>
         </div>
 
         <!-- 預設提示說明 -->
         <div id="scanning-placeholder" class="p-4 rounded-xl bg-gray-900/60 border border-gray-800 text-xs text-gray-400 leading-relaxed mb-4 space-y-2">
-          <p><strong class="text-gray-200">方式 1（即時鏡頭）：</strong>側身站立於鏡頭前 1.5～2 公尺處,系統將自動進行 5 秒靜態體態採樣。</p>
-          <p><strong class="text-gray-200">方式 2（上傳照片）：</strong>點擊左上角「上傳側面照片檢測」,選擇包含頭、肩、髖、膝的側面全身照即可秒出分析報告。</p>
+          <p><strong class="text-gray-200">方式 1（即時鏡頭）：</strong>全身站立於鏡頭前 1.5～2.5 公尺處，系統將自動進行 5 秒多維度採樣。</p>
+          <p><strong class="text-gray-200">方式 2（上傳照片）：</strong>上傳包含頭、肩、髖、膝、踝的全身照（側面或正面皆可），系統將自動識別所有潛在體態問題。</p>
         </div>
 
-        <!-- 快篩結果與問題識別卡片 -->
+        <!-- 快篩結果與全部問題識別卡片 -->
         <div id="assessment-result" class="hidden space-y-4">
-          <div class="p-4 rounded-xl bg-gray-900/80 border border-gray-800 space-y-1.5">
-            <p class="text-xs text-gray-400 uppercase font-bold">體態量化基準值</p>
-            <p class="text-sm text-gray-300">平均頭肩夾角：<strong id="avg-neck-angle" class="text-white">--°</strong></p>
-            <p class="text-sm text-gray-300">平均骨盆髖角：<strong id="avg-pelvic-angle" class="text-white">--°</strong></p>
+          <!-- 多維度量化數據 -->
+          <div class="p-3.5 rounded-xl bg-gray-900/80 border border-gray-800 grid grid-cols-3 gap-2 text-center">
+            <div>
+              <p class="text-[10px] text-gray-400">頭肩夾角</p>
+              <p id="avg-neck-angle" class="text-sm font-bold text-white mt-0.5">--°</p>
+            </div>
+            <div>
+              <p class="text-[10px] text-gray-400">骨盆髖角</p>
+              <p id="avg-pelvic-angle" class="text-sm font-bold text-white mt-0.5">--°</p>
+            </div>
+            <div>
+              <p class="text-[10px] text-gray-400">膝關節角</p>
+              <p id="avg-knee-angle" class="text-sm font-bold text-white mt-0.5">--°</p>
+            </div>
           </div>
 
-          <!-- 問題識別與處方引導區 -->
-          <div id="recommendation-card" class="p-4 rounded-xl border border-goldAccent/50 bg-goldAccent/10">
-            <span class="text-xs font-bold text-goldAccent">識別出特定體態問題</span>
-            <h3 id="rec-title" class="text-base font-bold text-white mt-1">--</h3>
-            <p id="rec-desc" class="text-xs text-gray-300 mt-1 leading-relaxed">--</p>
-            
-            <!-- 一鍵返回 PNF Assistant 頁面按鈕 (透過 localStorage 傳遞推薦動作並跳轉回首頁) -->
-            <button id="btn-goto-pnf" type="button" class="mt-4 w-full py-2.5 bg-gradient-to-r from-goldAccent to-amber-600 hover:from-amber-500 hover:to-amber-700 text-black text-sm font-extrabold rounded-xl transition flex items-center justify-center gap-2 shadow-lg shadow-goldAccent/20">
-              <i class="fa-solid fa-arrow-right-to-bracket"></i> 前往 PNF 頁面開始矯正
-            </button>
+          <!-- 識別出的所有問題與對應 PNF 處方清單 -->
+          <div class="space-y-2.5 max-h-[340px] overflow-y-auto pr-1" id="detected-issues-list">
+            <!-- 由 JS 動態填入所有偵測到的問題卡片與前往 PNF 按鈕 -->
           </div>
         </div>
       </div>
@@ -146,11 +149,17 @@
     let currentMode = "ASSESSMENT";
     const SCAN_DURATION_MS = 5000;
     let scanStartTime = null;
-    let neckAngleSamples = [];
-    let pelvicAngleSamples = [];
+    let samples = {
+      neck: [],
+      pelvic: [],
+      knee: [],
+      shoulderDiff: [],
+      hipDiff: [],
+      forwardHeadOffset: []
+    };
 
     async function initPoseLandmarker() {
-      guideText.innerText = "正在載入 AI 骨架模型...";
+      guideText.innerText = "正在載入 AI 全身骨架模型...";
       const vision = await FilesetResolver.forVisionTasks(
         "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm"
       );
@@ -183,7 +192,7 @@
           };
         }
       } catch (err) {
-        guideText.innerText = "⚠️ 無法開啟攝影機，您仍可使用「上傳側面照片檢測」功能";
+        guideText.innerText = "⚠️ 無法開啟攝影機，您仍可使用「上傳全身照片檢測」功能";
         console.error(err);
       }
     };
@@ -207,48 +216,168 @@
       return Math.round(deg);
     }
 
-    function getBestSideLandmarks(lm) {
-      const leftSide = [lm[7], lm[11], lm[23], lm[25]];
-      const rightSide = [lm[8], lm[12], lm[24], lm[26]];
+    // 擷取全身多維度關節指標（包含最佳側面與左右對稱度）
+    function extractPostureMetrics(lm) {
+      const leftSide = [lm[7], lm[11], lm[23], lm[25], lm[27]];
+      const rightSide = [lm[8], lm[12], lm[24], lm[26], lm[28]];
       const leftScore = leftSide.reduce((sum, pt) => sum + (pt?.visibility || 0), 0);
       const rightScore = rightSide.reduce((sum, pt) => sum + (pt?.visibility || 0), 0);
       const chosen = leftScore >= rightScore ? leftSide : rightSide;
-      const isVisible = chosen.every((pt) => pt && pt.visibility > 0.55);
-      return { ear: chosen[0], shoulder: chosen[1], hip: chosen[2], knee: chosen[3], isVisible };
+
+      const coreVisible = chosen.slice(0, 4).every((pt) => pt && pt.visibility > 0.55);
+      const ankleVisible = chosen[4] && chosen[4].visibility > 0.5;
+
+      const ear = chosen[0];
+      const shoulder = chosen[1];
+      const hip = chosen[2];
+      const knee = chosen[3];
+      const ankle = chosen[4];
+
+      const neckAngle = coreVisible ? getAngle(ear, shoulder, hip) : null;
+      const pelvicAngle = coreVisible ? getAngle(shoulder, hip, knee) : null;
+      const kneeAngle = (coreVisible && ankleVisible) ? getAngle(hip, knee, ankle) : null;
+
+      // 左右高低肩與骨盆高低差（正規化座標 y 差值轉近似角度偏差）
+      const shoulderDiff = (lm[11] && lm[12] && lm[11].visibility > 0.5 && lm[12].visibility > 0.5)
+        ? Math.round(Math.abs(lm[11].y - lm[12].y) * 100)
+        : 0;
+
+      const hipDiff = (lm[23] && lm[24] && lm[23].visibility > 0.5 && lm[24].visibility > 0.5)
+        ? Math.round(Math.abs(lm[23].y - lm[24].y) * 100)
+        : 0;
+
+      // 頭部相對肩膀水平偏移度
+      const forwardHeadOffset = (ear && shoulder)
+        ? Math.round(Math.abs(ear.x - shoulder.x) * 100)
+        : 0;
+
+      return {
+        coreVisible,
+        neckAngle,
+        pelvicAngle,
+        kneeAngle,
+        shoulderDiff,
+        hipDiff,
+        forwardHeadOffset
+      };
     }
 
-    // 識別問題並設定點擊後導回主系統 PNF 頁面的行為
-    function showAssessmentRecommendation(avgNeck, avgPelvic) {
-      document.getElementById("scanning-placeholder").classList.add("hidden");
-      document.getElementById("avg-neck-angle").innerText = `${avgNeck}°`;
-      document.getElementById("avg-pelvic-angle").innerText = `${avgPelvic}°`;
-      document.getElementById("assessment-result").classList.remove("hidden");
+    // 綜合分析所有體態問題並對應推薦的 PNF 伸展動作
+    function analyzeAllProblems(summary) {
+      const issues = [];
 
-      const recTitle = document.getElementById("rec-title");
-      const recDesc = document.getElementById("rec-desc");
-      const btnGotoPnf = document.getElementById("btn-goto-pnf");
-
-      let targetStretchKeyword = "胸大肌門框 PNF 拉伸";
-
-      if (avgNeck < 162) {
-        recTitle.innerText = "識別出：圓肩與頭部前傾";
-        recDesc.innerText = `偵測到頭肩角 ${avgNeck}° 低於標準值。建議優先進行胸大肌與上斜方肌 PNF 伸展。`;
-        targetStretchKeyword = "胸大肌門框 PNF 拉伸";
-      } else if (avgPelvic < 165) {
-        recTitle.innerText = "識別出：骨盆前傾代償";
-        recDesc.innerText = `偵測到軀幹髖角 ${avgPelvic}° 異常。建議優先進行髂腰肌與股直肌 PNF 伸展。`;
-        targetStretchKeyword = "髂腰肌高跪姿 PNF 伸展";
-      } else {
-        recTitle.innerText = "體態良好：全背維持課程";
-        recDesc.innerText = "您的靜態體態排列良好！建議維持日常 PNF 動態伸展與關節活動度訓練。";
-        targetStretchKeyword = "胸大肌門框 PNF 拉伸";
+      // 1. 圓肩 / 胸椎前凸 / 頭頸前傾
+      if (summary.neck !== null && summary.neck < 162) {
+        issues.push({
+          title: "圓肩與頭部前傾（上交叉症候群）",
+          badge: "肩頸/胸椎",
+          desc: `平均頭肩角為 ${summary.neck}°（低於標準 162°），胸大肌與頸部肌群可能處於緊繃縮短狀態。`,
+          stretchTitle: "胸大肌門框 PNF 拉伸"
+        });
       }
 
-      // 點擊按鈕時，將推薦的動作名稱存入 localStorage，並導航回主系統首頁的 PNF 模組
-      btnGotoPnf.onclick = () => {
-        localStorage.setItem("preferred_pnf_stretch", targetStretchKeyword);
-        window.location.href = "/"; // 返回你的主訓練系統首頁 (包含 PNF Assistant 頁面)
-      };
+      // 2. 骨盆前傾或髖部屈曲緊繃
+      if (summary.pelvic !== null && summary.pelvic < 165) {
+        issues.push({
+          title: "骨盆前傾與髖屈肌緊繃",
+          badge: "髖部/骨盆",
+          desc: `平均軀幹髖角為 ${summary.pelvic}°（低於標準 165°），髂腰肌或股直肌可能過度緊繃。`,
+          stretchTitle: "髂腰肌高跪姿 PNF 伸展"
+        });
+      }
+
+      // 3. 骨盆後傾或下背/後側鏈緊繃
+      if (summary.pelvic !== null && summary.pelvic > 183) {
+        issues.push({
+          title: "骨盆後傾與下背/臀腿張力異常",
+          badge: "腰椎/臀腿",
+          desc: `平均軀幹髖角為 ${summary.pelvic}°（高於標準 183°），建議放鬆下背與臀部肌群。`,
+          stretchTitle: "臀大肌仰臥抱膝 PNF 伸展"
+        });
+      }
+
+      // 4. 膝超伸（膝關節過度鎖死）
+      if (summary.knee !== null && summary.knee > 178) {
+        issues.push({
+          title: "膝關節超伸（Genu Recurvatum）",
+          badge: "膝關節/小腿",
+          desc: `平均膝關節夾角達 ${summary.knee}°（過度伸直），易造成膝蓋與小腿後側壓力。`,
+          stretchTitle: "腓腸肌推牆直膝 PNF 伸展"
+        });
+      }
+
+      // 5. 高低肩 / 軀幹側傾代償
+      if (summary.shoulderDiff >= 4) {
+        issues.push({
+          title: "高低肩與斜方肌/側軀幹張力不對稱",
+          badge: "左右對稱",
+          desc: `偵測到左右肩高度差指標為 ${summary.shoulderDiff}，建議針對緊繃側進行側屈與頸肩 PNF 伸展。`,
+          stretchTitle: "斜方肌上束側傾 PNF 伸展"
+        });
+      }
+
+      // 6. 骨盆高低差 / 側腰緊繃
+      if (summary.hipDiff >= 4) {
+        issues.push({
+          title: "骨盆高低差與腰方肌/腹外斜肌緊繃",
+          badge: "骨盆對稱",
+          desc: `偵測到左右髖部高度差指標為 ${summary.hipDiff}，建議進行軀幹側彎與髖部伸展。`,
+          stretchTitle: "腹外斜肌側彎 PNF 伸展"
+        });
+      }
+
+      // 若未偵測到明顯異常，提供日常維持處方
+      if (issues.length === 0) {
+        issues.push({
+          title: "整體體態排列良好（日常維持）",
+          badge: "狀態良好",
+          desc: "您的主要關節角度與對稱度皆在理想範圍內，建議透過 PNF 伸展維持關節活動度與肌肉彈性。",
+          stretchTitle: "胸大肌門框 PNF 拉伸"
+        });
+      }
+
+      return issues;
+    }
+
+    function avg(arr) {
+      if (!arr || arr.length === 0) return null;
+      return Math.round(arr.reduce((a, b) => a + b, 0) / arr.length);
+    }
+
+    // 渲染所有檢測出的問題與一鍵跳轉回 PNF 頁面的按鈕
+    function renderAllIssuesAndRecommendations(summary) {
+      document.getElementById("scanning-placeholder").classList.add("hidden");
+      document.getElementById("avg-neck-angle").innerText = summary.neck !== null ? `${summary.neck}°` : "--°";
+      document.getElementById("avg-pelvic-angle").innerText = summary.pelvic !== null ? `${summary.pelvic}°` : "--°";
+      document.getElementById("avg-knee-angle").innerText = summary.knee !== null ? `${summary.knee}°` : "--°";
+      document.getElementById("assessment-result").classList.remove("hidden");
+
+      const issues = analyzeAllProblems(summary);
+      const listEl = document.getElementById("detected-issues-list");
+      listEl.innerHTML = "";
+
+      issues.forEach((item) => {
+        const card = document.createElement("div");
+        card.className = "p-3.5 rounded-xl border border-goldAccent/40 bg-goldAccent/10 space-y-2";
+        card.innerHTML = `
+          <div class="flex items-center justify-between gap-2">
+            <span class="text-[11px] font-bold px-2 py-0.5 rounded bg-goldAccent/20 text-goldAccent">${item.badge}</span>
+            <span class="text-[11px] text-gray-300 font-semibold">推薦：${item.stretchTitle}</span>
+          </div>
+          <h3 class="text-sm font-bold text-white">${item.title}</h3>
+          <p class="text-xs text-gray-300 leading-relaxed">${item.desc}</p>
+          <button type="button" data-stretch="${item.stretchTitle}" class="btn-go-pnf-item mt-1 w-full py-2 bg-gradient-to-r from-goldAccent to-amber-600 hover:from-amber-500 hover:to-amber-700 text-black text-xs font-extrabold rounded-lg transition flex items-center justify-center gap-1.5 shadow">
+            <i class="fa-solid fa-arrow-right-to-bracket"></i> 前往 PNF 頁面開始（${item.stretchTitle}）
+          </button>
+        `;
+
+        card.querySelector(".btn-go-pnf-item").addEventListener("click", () => {
+          localStorage.setItem("preferred_pnf_stretch", item.stretchTitle);
+          window.location.href = "/";
+        });
+
+        listEl.appendChild(card);
+      });
     }
 
     function renderLoop() {
@@ -262,51 +391,57 @@
 
         if (results.landmarks && results.landmarks.length > 0) {
           const lm = results.landmarks[0];
-          const { ear, shoulder, hip, knee, isVisible } = getBestSideLandmarks(lm);
+          const metrics = extractPostureMetrics(lm);
 
           drawingUtils.drawConnectors(lm, PoseLandmarker.POSE_CONNECTIONS, { color: "#6366F1", lineWidth: 4 });
           drawingUtils.drawLandmarks(lm, { color: "#F43F5E", radius: 5 });
 
-          if (isVisible) {
-            const neckAngle = getAngle(ear, shoulder, hip);
-            const pelvicAngle = getAngle(shoulder, hip, knee);
-            angleReadout.innerText = `頭肩角: ${neckAngle}° | 骨盆角: ${pelvicAngle}°`;
+          if (metrics.coreVisible) {
+            angleReadout.innerText = `頭肩: ${metrics.neckAngle}° | 骨盆: ${metrics.pelvicAngle}° | 膝角: ${metrics.kneeAngle ?? "--"}°`;
 
             if (currentMode === "ASSESSMENT") {
-              handlePreSessionAssessment(neckAngle, pelvicAngle);
+              handlePreSessionAssessment(metrics);
             }
           } else if (currentMode === "ASSESSMENT") {
             scanStartTime = null;
-            neckAngleSamples = [];
-            pelvicAngleSamples = [];
+            samples = { neck: [], pelvic: [], knee: [], shoulderDiff: [], hipDiff: [], forwardHeadOffset: [] };
             progressContainer.classList.add("hidden");
-            guideText.innerText = "⚠️ 請側身站立，確保耳、肩、髖、膝完整入鏡";
+            guideText.innerText = "⚠️ 請站立於鏡頭前，確保頭、肩、髖、膝完整入鏡";
           }
         }
       }
       animationFrameId = requestAnimationFrame(renderLoop);
     }
 
-    function handlePreSessionAssessment(neckAngle, pelvicAngle) {
+    function handlePreSessionAssessment(metrics) {
       progressContainer.classList.remove("hidden");
       if (!scanStartTime) scanStartTime = performance.now();
 
       const elapsed = performance.now() - scanStartTime;
       const pct = Math.min(100, (elapsed / SCAN_DURATION_MS) * 100);
       scanProgress.style.width = `${pct}%`;
-      guideText.innerText = `正在採樣體態數據，請保持側身靜止... (${Math.ceil((SCAN_DURATION_MS - elapsed) / 1000)}s)`;
+      guideText.innerText = `正在進行全身多維度體態採樣... (${Math.ceil((SCAN_DURATION_MS - elapsed) / 1000)}s)`;
 
-      neckAngleSamples.push(neckAngle);
-      pelvicAngleSamples.push(pelvicAngle);
+      if (metrics.neckAngle !== null) samples.neck.push(metrics.neckAngle);
+      if (metrics.pelvicAngle !== null) samples.pelvic.push(metrics.pelvicAngle);
+      if (metrics.kneeAngle !== null) samples.knee.push(metrics.kneeAngle);
+      samples.shoulderDiff.push(metrics.shoulderDiff);
+      samples.hipDiff.push(metrics.hipDiff);
+      samples.forwardHeadOffset.push(metrics.forwardHeadOffset);
 
       if (elapsed >= SCAN_DURATION_MS) {
         currentMode = "COMPLETED";
         progressContainer.classList.add("hidden");
-        guideText.innerText = "✅ 體態問題識別完成！請點擊下方按鈕前往 PNF 頁面";
+        guideText.innerText = "✅ 全身問題識別完成！請選擇右側處方前往 PNF 頁面";
 
-        const avgNeck = Math.round(neckAngleSamples.reduce((a, b) => a + b, 0) / neckAngleSamples.length);
-        const avgPelvic = Math.round(pelvicAngleSamples.reduce((a, b) => a + b, 0) / pelvicAngleSamples.length);
-        showAssessmentRecommendation(avgNeck, avgPelvic);
+        renderAllIssuesAndRecommendations({
+          neck: avg(samples.neck),
+          pelvic: avg(samples.pelvic),
+          knee: avg(samples.knee),
+          shoulderDiff: avg(samples.shoulderDiff),
+          hipDiff: avg(samples.hipDiff),
+          forwardHeadOffset: avg(samples.forwardHeadOffset)
+        });
       }
     }
 
@@ -327,7 +462,7 @@
       uploadedPhoto.src = imageUrl;
 
       uploadedPhoto.onload = async () => {
-        guideText.innerText = "正在使用 AI 分析照片體態...";
+        guideText.innerText = "正在使用 AI 分析照片全身體態...";
         if (!poseLandmarker) await initPoseLandmarker();
 
         if (currentRunningMode !== "IMAGE") {
@@ -369,19 +504,24 @@
           drawingUtils.drawConnectors(mappedLandmarks, PoseLandmarker.POSE_CONNECTIONS, { color: "#10B981", lineWidth: 3 });
           drawingUtils.drawLandmarks(mappedLandmarks, { color: "#F43F5E", radius: 4 });
 
-          const { ear, shoulder, hip, knee, isVisible } = getBestSideLandmarks(lm);
+          const metrics = extractPostureMetrics(lm);
 
-          if (isVisible) {
-            const neckAngle = getAngle(ear, shoulder, hip);
-            const pelvicAngle = getAngle(shoulder, hip, knee);
-            angleReadout.innerText = `頭肩角: ${neckAngle}° | 骨盆角: ${pelvicAngle}°`;
-            guideText.innerText = "✅ 照片體態問題識別完成！請查看右側處方";
-            showAssessmentRecommendation(neckAngle, pelvicAngle);
+          if (metrics.coreVisible) {
+            angleReadout.innerText = `頭肩: ${metrics.neckAngle}° | 骨盆: ${metrics.pelvicAngle}° | 膝角: ${metrics.kneeAngle ?? "--"}°`;
+            guideText.innerText = "✅ 照片全身問題識別完成！請查看右側處方清單";
+            renderAllIssuesAndRecommendations({
+              neck: metrics.neckAngle,
+              pelvic: metrics.pelvicAngle,
+              knee: metrics.kneeAngle,
+              shoulderDiff: metrics.shoulderDiff,
+              hipDiff: metrics.hipDiff,
+              forwardHeadOffset: metrics.forwardHeadOffset
+            });
           } else {
-            guideText.innerText = "⚠️ 無法完整辨識側面關節，請上傳包含頭, 肩, 髖, 膝的清晰全身側面照";
+            guideText.innerText = "⚠️ 無法完整辨識主要關節，請上傳包含頭、肩、髖、膝的清晰全身照";
           }
         } else {
-          guideText.innerText = "❌ 照片中未偵測到人體骨架，請更換光線充足的側面照重試";
+          guideText.innerText = "❌ 照片中未偵測到人體骨架，請更換光線充足的全身照重試";
         }
 
         URL.revokeObjectURL(imageUrl);
@@ -398,9 +538,8 @@
 
       currentMode = "ASSESSMENT";
       scanStartTime = null;
-      neckAngleSamples = [];
-      pelvicAngleSamples = [];
-      document.getElementById("mode-badge").innerText = "體態快篩";
+      samples = { neck: [], pelvic: [], knee: [], shoulderDiff: [], hipDiff: [], forwardHeadOffset: [] };
+      document.getElementById("mode-badge").innerText = "全身快篩";
       document.getElementById("scanning-placeholder").classList.remove("hidden");
       document.getElementById("assessment-result").classList.add("hidden");
 
