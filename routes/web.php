@@ -18,7 +18,9 @@ Route::get('/ai-assessment', function () {
 
 use App\Models\PosturalDeviation;
 
-Route::get('/', function () {
+Route::get('/pnf', function () {
     $deviations = PosturalDeviation::with('recommendedStretches')->get();
-    return view('welcome', compact('deviations')); // 假設你的主頁是 welcome.blade.php 或 app.blade.php
+    
+    // 修正這裡：指定到 views/partials/pnf.blade.php
+    return view('partials.pnf', compact('deviations'));
 });

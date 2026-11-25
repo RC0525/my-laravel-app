@@ -78,9 +78,7 @@
         <button id="tab-btn-posture" onclick="switchTab('posture')" class="tab-btn flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold text-gray-400 hover:text-white hover:bg-cardDark transition-all duration-200">
           <i class="fa-solid fa-child-reaching"></i> Posture
         </button>
-        <button id="tab-btn-analytics" onclick="switchTab('analytics')" class="tab-btn flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold text-gray-400 hover:text-white hover:bg-cardDark transition-all duration-200">
-          <i class="fa-solid fa-chart-line"></i> Analytics &amp; SUS
-        </button>
+        
         <a href="/ai-assessment" id="tab-btn-ai" class="tab-btn flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold text-gray-400 hover:text-white hover:bg-cardDark transition-all duration-200">
           <i class="fa-solid fa-chart-line"></i> AI Assessment
         </a>
@@ -100,7 +98,6 @@
     @include('partials.pnf')
     @include('partials.tut')
     @include('partials.posture')
-    @include('partials.analytics')
   </main>
 
   <!-- Footer -->
@@ -550,58 +547,9 @@
       "I needed to learn a lot of things before I could get going with this Web App."
     ];
 
-    function populateSusQuestions() {
-      const container = document.getElementById('sus-questions-container');
-      container.innerHTML = '';
+    
 
-      SUS_QUESTIONS.forEach((q, idx) => {
-        const qNum = idx + 1;
-        const qCard = document.createElement('div');
-        qCard.className = 'p-3.5 rounded-xl bg-surfaceDark border border-gray-800 space-y-2';
-
-        qCard.innerHTML = `
-          <p class="text-xs font-medium text-gray-200">${qNum}. ${q}</p>
-          <div class="flex items-center justify-between max-w-md text-xs text-gray-400">
-            <span class="text-[10px]">Disagree</span>
-            <div class="flex items-center gap-3">
-              ${[1, 2, 3, 4, 5].map(val => `
-                <label class="flex flex-col items-center gap-1 cursor-pointer">
-                  <input type="radio" name="sus_q${qNum}" value="${val}" ${val === 4 ? 'checked' : ''} class="accent-goldAccent">
-                  <span class="text-[10px] text-gray-500">${val}</span>
-                </label>
-              `).join('')}
-            </div>
-            <span class="text-[10px]">Agree</span>
-          </div>
-        `;
-        container.appendChild(qCard);
-      });
-    }
-
-    function calculateSusScore(e) {
-      e.preventDefault();
-      let totalScore = 0;
-
-      for (let i = 1; i <= 10; i++) {
-        const val = parseInt(document.querySelector(`input[name="sus_q${i}"]:checked`).value);
-        if (i % 2 !== 0) {
-          totalScore += (val - 1);
-        } else {
-          totalScore += (5 - val);
-        }
-      }
-
-      const finalSus = totalScore * 2.5;
-      document.getElementById('sus-calculated-score').textContent = `${finalSus.toFixed(1)} / 100`;
-
-      let rating = "Above Average";
-      if (finalSus < 50) rating = "Poor Usability";
-      else if (finalSus < 68) rating = "OK / Marginal";
-      else if (finalSus >= 80.3) rating = "Excellent / Grade A";
-
-      alert(`SUS Usability Score Calculated: ${finalSus.toFixed(1)} / 100 (${rating})`);
-      logActivity(`Submitted SUS Survey Score: ${finalSus.toFixed(1)}/100`);
-    }
+    
 
     window.onload = function() {
       const firstPreset = document.querySelector('.pnf-preset-btn');
