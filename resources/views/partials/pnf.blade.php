@@ -267,7 +267,7 @@
       tip: "屈膝外展拉伸大腿內側，保持姿勢穩定"
     },
     {
-      keywords: ["腓腸肌", "比目魚", "小腿", "跟腱", "推牆"],
+      keywords: ["腓腸肌", "比目魚", "小腿", "跟腱", "推牆", "壁面"],
       left: [25, 27, 31], right: [26, 28, 32],
       target: 85, comparator: "<=",
       requireLowerBody: true,
@@ -306,6 +306,7 @@
   const jointReadout = document.getElementById("ai-joint-readout");
   const feedbackSubtext = document.getElementById("ai-feedback-subtext");
   const btnSimulate = document.getElementById("ai-btn-simulate");
+  const targetLabel = document.getElementById("pnf-target-label");
 
   let poseLandmarker = null;
   let webcamStream = null;
@@ -321,6 +322,38 @@
   let activeStretchTitle = activePresetBtn?.dataset.title || "胸大肌門框 PNF 拉伸";
   let activeDbRule = activePresetBtn?.dataset.aiRules ? JSON.parse(activePresetBtn.dataset.aiRules) : null;
 
+  function normalizeStretchTitle(str = "") {
+    return str
+      .replace(/\s+/g, "")
+      .replace(/PNF/gi, "")
+      .replace(/推牆/g, "壁面")
+      .replace(/伸展/g, "拉伸")
+      .trim()
+      .toLowerCase();
+  }
+
+  function findPresetButtonByTitle(preferredTitle) {
+    const buttons = Array.from(document.querySelectorAll(".pnf-preset-btn"));
+    if (!buttons.length || !preferredTitle) return null;
+
+    const targetNorm = normalizeStretchTitle(preferredTitle);
+    let found = buttons.find(b => normalizeStretchTitle(b.dataset.title || "") === targetNorm);
+    if (found) return found;
+
+    found = buttons.find(b => {
+      const bNorm = normalizeStretchTitle(b.dataset.title || "");
+      return bNorm.includes(targetNorm) || targetNorm.includes(bNorm);
+    });
+    if (found) return found;
+
+    const muscleMatch = preferredTitle.match(/[\u4e00-\u9fa5]{2,4}(?=推牆|壁面|跪姿|仰臥|側彎|側屈|抱膝|直膝|屈膝|PNF|\s|$)/);
+    if (muscleMatch) {
+      const key = normalizeStretchTitle(muscleMatch[0]);
+      found = buttons.find(b => normalizeStretchTitle(b.dataset.title || "").includes(key));
+    }
+    return found || null;
+  }
+
   function getCurrentRule() {
     if (activeDbRule && activeDbRule.left && activeDbRule.right) {
       return activeDbRule;
@@ -330,6 +363,23 @@
 
   function getActiveGuideText() {
     return document.getElementById("pnf-guide-steps-list")?.innerText || "";
+  }
+
+  // 檢查即時鏡頭是否拍到完整全身／距離是否過遠
+  function checkLiveFraming(landmarks) {
+    const visPts = landmarks.filter(pt => pt && (pt.visibility ?? 0) >= 0.5);
+    if (visPts.length < 10) {
+      return { ok: false, msg: "❌ 未偵測到完整全身：請調整鏡頭角度，讓全身完整入鏡" };
+    }
+    const ys = visPts.map(pt => pt.y);
+    const bodySpanY = Math.max(...ys) - Math.min(...ys);
+    if (bodySpanY < 0.35) {
+      return { ok: false, msg: "📏 距離鏡頭太遠：請往前靠近約 1.5～2 公尺，讓身體佔畫面約 50%～75%" };
+    }
+    if (Math.min(...ys) < 0.03 || Math.max(...ys) > 0.97) {
+      return { ok: false, msg: "📐 部分身體超出畫面邊緣：請微調距離，確保頭部與雙腳完整入鏡" };
+    }
+    return { ok: true, msg: "" };
   }
 
   async function ensureLandmarker() {
@@ -508,15 +558,18 @@
     if (results.landmarks && results.landmarks.length > 0) {
       const lm = results.landmarks[0];
       lastDetectedLandmarks = lm;
+      const framing = checkLiveFraming(lm);
       const res = evaluateFrame(lm);
-      const color = (res.valid || isSimulatedHold) ? "#10B981" : "#EF4444";
+      const effectiveValid = framing.ok && res.valid;
+      const effectiveMsg = !framing.ok ? framing.msg : res.msg;
+      const color = (effectiveValid || isSimulatedHold) ? "#10B981" : "#EF4444";
 
       drawingUtils.drawConnectors(lm, PoseLandmarker.POSE_CONNECTIONS, { color, lineWidth: 4 });
       drawingUtils.drawLandmarks(lm, { color: "#FFFFFF", radius: 4 });
-      updateUiHoldState(res.valid, res.msg);
+      updateUiHoldState(effectiveValid, effectiveMsg);
     } else {
       lastDetectedLandmarks = null;
-      updateUiHoldState(false, "❌ 未偵測到人體，請站入攝影機畫面中");
+      updateUiHoldState(false, "❌ 未偵測到全身：請站入鏡頭畫面內，並保持光線充足");
     }
 
     animId = requestAnimationFrame(videoDetectLoop);
@@ -679,6 +732,10 @@
     activeStretchTitle = btn.dataset.title || "";
     activeDbRule = btn.dataset.aiRules ? JSON.parse(btn.dataset.aiRules) : null;
 
+    if (targetLabel && activeStretchTitle) {
+      targetLabel.innerText = `TARGET: ${activeStretchTitle}`;
+    }
+
     const rule = getCurrentRule();
     jointReadout.innerText = `Angle: --° | Target: ${rule.comparator}${rule.target}°`;
     feedbackSubtext.innerText = `已切換動作規則：${rule.tip}`;
@@ -691,4 +748,17 @@
       updateUiHoldState(res.valid, res.msg);
     }
   };
+
+  // 處理從 Posture Lab 一鍵跳轉過來的指定動作（支援「推牆」與「壁面」互通）
+  function consumePreferredStretch() {
+    const preferred = localStorage.getItem("preferred_pnf_stretch");
+    if (!preferred) return;
+    const matchedBtn = findPresetButtonByTitle(preferred);
+    if (matchedBtn) {
+      window.handlePnfPresetClick(matchedBtn);
+    }
+    localStorage.removeItem("preferred_pnf_stretch");
+  }
+
+  setTimeout(consumePreferredStretch, 120);
 </script>
