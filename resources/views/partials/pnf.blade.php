@@ -1,161 +1,190 @@
+<style>
+  #module-pnf .presets-scroll-track {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(245, 158, 11, 0.35) rgba(31, 41, 55, 0.4);
+    -webkit-overflow-scrolling: touch;
+  }
+  #module-pnf .presets-scroll-track::-webkit-scrollbar {
+    height: 6px;
+  }
+  #module-pnf .presets-scroll-track::-webkit-scrollbar-track {
+    background: rgba(31, 41, 55, 0.4);
+    border-radius: 9999px;
+  }
+  #module-pnf .presets-scroll-track::-webkit-scrollbar-thumb {
+    background: rgba(245, 158, 11, 0.45);
+    border-radius: 9999px;
+  }
+  #module-pnf .pnf-media-box {
+    aspect-ratio: 4 / 3;
+  }
+  @media (min-width: 768px) {
+    #module-pnf .pnf-media-box {
+      aspect-ratio: 16 / 9;
+    }
+  }
+</style>
 
-<section id="module-pnf" class="tab-content space-y-6">
+<section id="module-pnf" class="tab-content space-y-4 sm:space-y-6 w-full max-w-full min-w-0">
   <!-- Top Banner / Routine Selection -->
-  <div class="glass-card rounded-2xl p-5 border border-gray-800 flex flex-col gap-4">
-    <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-      <div>
-        <h2 class="text-lg font-bold text-white flex items-center gap-2">
-          <i class="fa-solid fa-heart-pulse text-goldAccent"></i> PNF Stretching Protocol Assistant
-          <span class="px-2 py-0.5 text-[10px] font-bold rounded-md bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+  <div class="glass-card rounded-2xl p-4 sm:p-5 border border-gray-800/90 flex flex-col gap-3.5 min-w-0">
+    <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-3 min-w-0">
+      <div class="min-w-0">
+        <h2 class="text-base sm:text-lg font-bold text-white flex flex-wrap items-center gap-2">
+          <span class="flex items-center gap-2">
+            <i class="fa-solid fa-heart-pulse text-goldAccent"></i> PNF Stretching Protocol Assistant
+          </span>
+          <span class="px-2 py-0.5 text-[10px] font-bold rounded-md bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 uppercase tracking-wide">
             AI POSE HOLD ACTIVE
           </span>
         </h2>
-        <p class="text-xs text-gray-400 mt-1">
+        <p class="text-[11px] sm:text-xs text-gray-400 mt-1 leading-relaxed">
           Proprioceptive Neuromuscular Facilitation (Hold-Relax Method): AI tracks your joint angles in real-time and counts down only while proper stretch posture is held.
         </p>
       </div>
     </div>
 
-    <!-- Muscle Presets (Dynamic from DB - 22 Protocols) -->
-    <div class="flex items-center gap-2 overflow-x-auto pb-2 w-full">
-      <span class="text-xs text-gray-400 font-medium whitespace-nowrap mr-1"><i class="fa-solid fa-database text-goldAccent mr-1"></i> Presets (22):</span>
-      @if(isset($deviations) && $deviations->count() > 0)
-        @foreach($deviations as $dIndex => $deviation)
-          @foreach($deviation->recommendedStretches as $sIndex => $stretch)
-            <button type="button"
-              data-stretch-id="{{ $stretch->id }}"
-              data-title="{{ $stretch->title_zh }}"
-              data-steps='{{ json_encode($stretch->pnfSteps) }}'
-              data-ai-rules='@json($stretch->ai_rules)'
-              onclick="handlePnfPresetClick(this)"
-              class="pnf-preset-btn ...">
-              <i class="fa-solid fa-heart-pulse"></i> {{ $stretch->title_zh }}
-            </button>
+    <!-- Muscle Presets (Dynamic from DB - 22 Protocols, Smooth Horizontal Scroll on Phone / iPad / Desktop) -->
+    <div class="w-full min-w-0">
+      <div id="pnf-presets-scroll" class="presets-scroll-track flex items-center gap-2 overflow-x-auto pb-2 w-full min-w-0 touch-pan-x">
+        @if(isset($deviations) && $deviations->count() > 0)
+          @foreach($deviations as $dIndex => $deviation)
+            @foreach($deviation->recommendedStretches as $sIndex => $stretch)
+              <button type="button"
+                data-stretch-id="{{ $stretch->id }}"
+                data-title="{{ $stretch->title_zh }}"
+                data-steps='{{ json_encode($stretch->pnfSteps) }}'
+                data-ai-rules='@json($stretch->ai_rules)'
+                onclick="handlePnfPresetClick(this)"
+                class="pnf-preset-btn shrink-0 min-h-[36px] whitespace-nowrap {{ ($dIndex === 0 && $sIndex === 0) ? 'active-preset bg-goldAccent/20 text-goldAccent border-goldAccent/50' : 'bg-[#171923] text-gray-300 border-gray-700/80' }} px-3 py-1.5 rounded-lg text-xs font-semibold hover:bg-goldAccent hover:text-black transition border inline-flex items-center gap-1.5">
+                <i class="fa-solid fa-heart-pulse text-[11px]"></i>
+                <span>{{ $stretch->title_zh }}</span>
+              </button>
+            @endforeach
           @endforeach
-        @endforeach
-      @else
-        <span class="text-xs text-gray-500">尚無預設動作</span>
-      @endif
+        @else
+          <span class="text-xs text-gray-500">尚無預設動作</span>
+        @endif
+      </div>
     </div>
   </div>
 
   <!-- Main Interactive Dashboard Grid -->
-  <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 min-w-0 items-stretch">
 
-    <!-- Left: AI Pose Detection & Smart Hold Timer Display (8 cols) -->
-    <div class="lg:col-span-8 glass-card rounded-2xl p-6 flex flex-col items-center justify-between relative overflow-hidden min-h-[500px]">
+    <!-- Left: AI Pose Detection & Smart Hold Timer Display (8 cols on lg+) -->
+    <div class="lg:col-span-8 glass-card rounded-2xl p-3.5 sm:p-6 border border-gray-800/90 flex flex-col items-center justify-between relative overflow-hidden min-w-0">
       
       <!-- Background Ambient Glow -->
       <div id="pnf-glow-bg" class="absolute inset-0 bg-goldAccent/5 blur-3xl pointer-events-none transition-colors duration-500"></div>
 
       <!-- Top Header: Target Muscle, Source Switch & Cycle Counter -->
       <div class="z-10 mb-3 flex flex-wrap items-center justify-between gap-2 w-full">
-        <div class="flex items-center gap-2">
-          <span id="pnf-target-label" class="text-xs uppercase tracking-widest font-bold px-3 py-1 rounded-full bg-surfaceDark text-goldAccent border border-goldAccent/30">
-            Target: Chest Stretch
+        <div class="flex flex-wrap items-center gap-1.5 sm:gap-2 min-w-0">
+          <span id="pnf-target-label" class="text-[11px] sm:text-xs uppercase tracking-wider font-bold px-3 py-1 rounded-full bg-amber-500/15 text-goldAccent border border-goldAccent/40 truncate max-w-[210px] sm:max-w-none">
+            TARGET: 胸大肌門框 PNF 拉伸
           </span>
           <!-- 來源切換：即時攝影機 / 上傳照片驗證 -->
-          <button type="button" id="ai-btn-cam" onclick="switchPnfAiSource('cam')" class="px-2.5 py-1 rounded-lg text-[11px] font-bold bg-indigo-600 text-white transition">
-            <i class="fa-solid fa-video mr-1"></i>Live Cam
+          <button type="button" id="ai-btn-cam" onclick="switchPnfAiSource('cam')" class="min-h-[32px] px-2.5 py-1 rounded-lg text-[11px] font-bold bg-indigo-600 hover:bg-indigo-500 text-white transition inline-flex items-center gap-1">
+            <i class="fa-solid fa-video"></i> Live Cam
           </button>
-          <label for="ai-photo-input" id="ai-btn-photo" class="cursor-pointer px-2.5 py-1 rounded-lg text-[11px] font-bold bg-gray-800 hover:bg-gray-700 text-gray-300 border border-gray-700 transition">
-            <i class="fa-solid fa-image mr-1"></i>Photo Test
+          <label for="ai-photo-input" id="ai-btn-photo" class="min-h-[32px] cursor-pointer px-2.5 py-1 rounded-lg text-[11px] font-bold bg-[#1b1e2b] hover:bg-gray-700 text-gray-200 border border-gray-700 transition inline-flex items-center gap-1">
+            <i class="fa-solid fa-image"></i> Photo Test
           </label>
           <input type="file" id="ai-photo-input" accept="image/*" class="hidden">
         </div>
 
-        <span class="text-xs text-gray-400 font-semibold">
+        <span class="text-xs text-gray-400 font-semibold shrink-0">
           Cycle <span id="pnf-cycle-count" class="text-white font-bold">1</span> of 3
         </span>
       </div>
 
       <!-- Center: AI Camera/Canvas Viewport + Floating HUD Timer -->
-      <div class="relative z-10 w-full aspect-video bg-black rounded-2xl overflow-hidden border-2 border-gray-800 flex items-center justify-center shadow-inner transition-colors duration-300" id="ai-viewport-frame">
+      <div class="relative z-10 w-full pnf-media-box bg-[#050609] rounded-2xl overflow-hidden border border-gray-800 flex items-center justify-center shadow-inner transition-colors duration-300" id="ai-viewport-frame">
         <video id="pnf-ai-webcam" autoplay playsinline class="w-full h-full object-cover -scale-x-100"></video>
-        <img id="pnf-ai-photo" class="hidden max-w-full max-h-full object-contain" alt="Posture Check">
+        <img id="pnf-ai-photo" class="hidden w-full h-full object-contain" alt="Posture Check">
         <canvas id="pnf-ai-canvas" class="absolute inset-0 w-full h-full pointer-events-none -scale-x-100"></canvas>
 
         <!-- Top-Left HUD: Joint Angle & Hold Gate Status -->
-        <div class="absolute top-3 left-3 flex flex-col gap-1.5 text-left">
-          <div id="ai-hold-badge" class="px-3 py-1 rounded-full text-xs font-bold bg-black/80 text-gray-300 border border-gray-700 backdrop-blur-md flex items-center gap-2">
-            <span id="ai-hold-dot" class="w-2 h-2 rounded-full bg-gray-500"></span>
-            <span id="ai-hold-status-text">AI Standby (Click Start)</span>
+        <div class="absolute top-2.5 left-2.5 sm:top-3.5 sm:left-3.5 flex flex-col gap-1.5 text-left max-w-[60%]">
+          <div id="ai-hold-badge" class="px-2.5 py-1 rounded-full text-[10px] sm:text-xs font-bold bg-black/85 text-gray-200 border border-gray-700/90 backdrop-blur-md flex items-center gap-1.5 truncate">
+            <span id="ai-hold-dot" class="w-2 h-2 rounded-full bg-gray-400 shrink-0"></span>
+            <span id="ai-hold-status-text" class="truncate">AI Standby (Click Start)</span>
           </div>
-          <span id="ai-joint-readout" class="px-2.5 py-1 rounded-lg text-[11px] font-mono bg-black/75 text-goldAccent border border-gray-800 backdrop-blur-sm">
-            Angle: --° | Target: --°
+          <span id="ai-joint-readout" class="px-2.5 py-1 rounded-lg text-[10px] sm:text-[11px] font-mono bg-black/80 text-goldAccent border border-gray-800 backdrop-blur-sm truncate">
+            Angle: --° | Target: &gt;=75°
           </span>
         </div>
 
-        <!-- Top-Right HUD: Compact Circular SVG Progress Timer (Preserves all original IDs!) -->
-        <div class="absolute top-3 right-3 w-28 h-28 sm:w-32 sm:h-32 rounded-2xl bg-black/75 backdrop-blur-md border border-gray-700/80 p-2 flex items-center justify-center shadow-lg">
+        <!-- Top-Right HUD: Compact Circular SVG Progress Timer -->
+        <div class="absolute top-2.5 right-2.5 sm:top-3.5 sm:right-3.5 w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 rounded-2xl bg-[#0e1017]/85 backdrop-blur-md border border-gray-700/80 p-2 flex items-center justify-center shadow-lg">
           <svg class="w-full h-full -rotate-90" viewBox="0 0 120 120">
-            <circle class="text-gray-800" stroke-width="8" stroke="currentColor" fill="transparent" r="52" cx="60" cy="60" />
-            <circle id="pnf-progress-circle" class="progress-ring__circle text-goldAccent transition-all duration-300" stroke-width="8" stroke-dasharray="326.72" stroke-dashoffset="0" stroke-linecap="round" stroke="currentColor" fill="transparent" r="52" cx="60" cy="60" />
+            <circle class="text-gray-800" stroke-width="7" stroke="currentColor" fill="transparent" r="52" cx="60" cy="60" />
+            <circle id="pnf-progress-circle" class="progress-ring__circle text-goldAccent transition-all duration-300" stroke-width="7" stroke-dasharray="326.72" stroke-dashoffset="0" stroke-linecap="round" stroke="currentColor" fill="transparent" r="52" cx="60" cy="60" />
           </svg>
-          <div class="absolute inset-0 flex flex-col items-center justify-center text-center p-1">
-            <span id="pnf-phase-badge" class="text-[8px] font-extrabold uppercase tracking-wider px-1.5 py-0.5 rounded bg-goldAccent/20 text-goldAccent border border-goldAccent/40 truncate max-w-[95px]">
-              PREPARATION
+          <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-1">
+            <span id="pnf-phase-badge" class="text-[7px] sm:text-[8px] font-extrabold tracking-wider px-1.5 py-0.5 rounded bg-goldAccent/20 text-goldAccent border border-goldAccent/40 truncate max-w-[74px] sm:max-w-[96px]">
+              STEP 1: 初始預備
             </span>
-            <span id="pnf-timer-digits" class="text-2xl sm:text-3xl font-extrabold text-white font-mono leading-tight mt-0.5">
+            <span id="pnf-timer-digits" class="text-xl sm:text-2xl md:text-3xl font-extrabold text-white font-mono leading-tight mt-0.5">
               10
             </span>
           </div>
         </div>
 
         <!-- Bottom HUD: Real-time Posture Instruction & Simulation Fallback -->
-        <div class="absolute bottom-3 left-3 right-3 bg-black/85 backdrop-blur-md border border-gray-700/80 px-3.5 py-2.5 rounded-xl flex items-center justify-between gap-2 text-left">
+        <div class="absolute bottom-2.5 left-2.5 right-2.5 sm:bottom-3.5 sm:left-3.5 sm:right-3.5 bg-[#0e1017]/90 backdrop-blur-md border border-gray-800 px-3 py-2.5 sm:px-4 sm:py-3 rounded-xl flex items-center justify-between gap-2 text-left">
           <div class="min-w-0 flex-1">
-            <p id="pnf-instruction-text" class="text-xs font-bold text-white truncate">
-              Position target muscle in stretch position
+            <p id="pnf-instruction-text" class="text-xs sm:text-sm font-bold text-white truncate">
+              前臂貼齊門框，單腳微向前跨立，挺胸預備。
             </p>
-            <p id="ai-feedback-subtext" class="text-[11px] text-gray-400 truncate mt-0.5">
-              Press "Start Session" to activate AI posture tracking
+            <p id="ai-feedback-subtext" class="text-[10px] sm:text-xs text-gray-400 truncate mt-0.5">
+              已切換動作規則：抬起手臂扶住門框（大臂外展 ≥ 75°）並挺胸前跨
             </p>
           </div>
-          <!-- 無攝影機環境專用的模擬達標測試鈕 -->
           <button type="button" id="ai-btn-simulate" onclick="toggleSimulatePoseHold()" class="hidden shrink-0 px-2.5 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-[11px] font-bold text-white transition">
             模擬動作達標
           </button>
         </div>
       </div>
 
-      <!-- Phase Progress Flow Bar (Visual Stepper) -->
-      <div id="pnf-stepper-container" class="z-10 w-full max-w-lg my-4 grid grid-cols-3 sm:grid-cols-6 gap-2 text-center">
+      <!-- Phase Progress Flow Bar (6 Steps) -->
+      <div id="pnf-stepper-container" class="z-10 w-full max-w-2xl my-3.5 sm:my-4 grid grid-cols-3 sm:grid-cols-6 gap-2 text-center">
         <!-- Dynamically Rendered by JS -->
       </div>
 
       <!-- Interactive Controls Row -->
-      <div class="z-10 flex items-center justify-center gap-3 flex-wrap w-full max-w-md">
-        <button id="pnf-btn-start" onclick="startPnfTimer()" class="flex-1 min-w-[120px] py-3 px-5 rounded-xl font-bold text-sm bg-gradient-to-r from-goldAccent to-goldHover text-black shadow-lg shadow-goldAccent/20 hover:scale-[1.02] active:scale-95 transition">
+      <div class="z-10 grid grid-cols-2 sm:flex sm:items-center sm:justify-center gap-2.5 sm:gap-3 w-full max-w-xl">
+        <button id="pnf-btn-start" onclick="startPnfTimer()" class="col-span-2 sm:flex-1 min-h-[46px] py-2.5 px-5 rounded-xl font-extrabold text-xs sm:text-sm bg-gradient-to-r from-amber-400 to-goldAccent text-black shadow-lg shadow-goldAccent/20 hover:brightness-105 active:scale-95 transition">
           <i class="fa-solid fa-play mr-1.5"></i> Start Session
         </button>
-        <button id="pnf-btn-pause" onclick="pausePnfTimer()" disabled class="py-3 px-4 rounded-xl font-bold text-sm bg-gray-800 text-gray-400 border border-gray-700 hover:bg-gray-700 disabled:opacity-40 disabled:pointer-events-none transition">
-          <i class="fa-solid fa-pause"></i> Pause
+        <button id="pnf-btn-pause" onclick="pausePnfTimer()" disabled class="min-h-[42px] py-2.5 px-4 rounded-xl font-bold text-xs sm:text-sm bg-[#171923] text-gray-400 border border-gray-800 hover:bg-gray-800 disabled:opacity-45 disabled:pointer-events-none transition">
+          <i class="fa-solid fa-pause mr-1"></i> Pause
         </button>
-        <button id="pnf-btn-reset" onclick="resetPnfTimer()" class="py-3 px-4 rounded-xl font-bold text-sm bg-gray-800 text-gray-300 border border-gray-700 hover:bg-gray-700 transition">
-          <i class="fa-solid fa-rotate-left"></i> Reset
+        <button id="pnf-btn-reset" onclick="resetPnfTimer()" class="min-h-[42px] py-2.5 px-4 rounded-xl font-bold text-xs sm:text-sm bg-[#171923] text-gray-200 border border-gray-800 hover:bg-gray-800 transition">
+          <i class="fa-solid fa-rotate-left mr-1"></i> Reset
         </button>
-        <button onclick="skipPnfPhase()" class="py-3 px-4 rounded-xl font-bold text-sm bg-surfaceDark text-goldAccent border border-goldAccent/40 hover:bg-goldAccent/10 transition">
-          <i class="fa-solid fa-forward-step"></i> Skip Step
+        <button onclick="skipPnfPhase()" class="col-span-2 sm:col-span-1 min-h-[42px] py-2.5 px-4 rounded-xl font-bold text-xs sm:text-sm bg-[#171923] text-goldAccent border border-goldAccent/40 hover:bg-goldAccent/10 transition">
+          <i class="fa-solid fa-forward-step mr-1"></i> Skip Step
         </button>
       </div>
 
     </div>
 
-    <!-- Right: Instruction Guidelines Card (4 cols) -->
-    <div class="lg:col-span-4 glass-card rounded-2xl p-6 border border-gray-800 flex flex-col justify-between space-y-4">
-      <div>
-        <div class="flex items-center gap-2 text-goldAccent font-bold text-sm mb-3">
+    <!-- Right: Instruction Guidelines Card (4 cols on lg+) -->
+    <div class="lg:col-span-4 glass-card rounded-2xl p-4 sm:p-6 border border-gray-800/90 flex flex-col justify-between space-y-4 min-w-0">
+      <div class="min-w-0">
+        <div class="flex items-center gap-2 text-goldAccent font-bold text-sm mb-3.5">
           <i class="fa-solid fa-book-open"></i> PNF Protocol Execution Guide
         </div>
         
-        <div id="pnf-guide-steps-list" class="space-y-2.5 text-xs text-gray-300 max-h-[380px] overflow-y-auto pr-1">
-            <!-- Rendered via JS -->
+        <div id="pnf-guide-steps-list" class="space-y-2.5 text-xs text-gray-300 max-h-[300px] md:max-h-[380px] lg:max-h-[440px] overflow-y-auto pr-1">
+          <!-- Rendered via JS -->
         </div>
       </div>
 
       <!-- Scientific Note Footer -->
-      <div class="p-3 rounded-xl bg-goldAccent/10 border border-goldAccent/30 text-[11px] text-gray-300">
+      <div class="p-3.5 rounded-xl bg-amber-500/10 border border-goldAccent/30 text-[11px] text-gray-300 leading-relaxed">
         <i class="fa-solid fa-lightbulb text-goldAccent mr-1"></i>
         <strong>Neuro-Physiology Note:</strong> PNF utilizes Golgi Tendon Organ (GTO) autogenic inhibition to override stretch reflex resistance.
       </div>
@@ -253,6 +282,17 @@
     tip: "請將全身側面置於鏡頭內並保持目標拉伸姿勢"
   };
 
+  // 滑鼠滾輪在 Presets (22) 橫向列上自然左右滾動
+  const presetsScrollEl = document.getElementById("pnf-presets-scroll");
+  if (presetsScrollEl) {
+    presetsScrollEl.addEventListener("wheel", (e) => {
+      if (Math.abs(e.deltaY) > Math.abs(e.deltaX) && presetsScrollEl.scrollWidth > presetsScrollEl.clientWidth) {
+        presetsScrollEl.scrollLeft += e.deltaY;
+        e.preventDefault();
+      }
+    }, { passive: false });
+  }
+
   // DOM 元素
   const video = document.getElementById("pnf-ai-webcam");
   const photoImg = document.getElementById("pnf-ai-photo");
@@ -275,13 +315,12 @@
   let isPoseHeldValid = false;
   let isSimulatedHold = false;
   let lastDetectedLandmarks = null;
+  let lastPhotoValid = false;
 
-  // 取得當前預設按鈕與其帶有的資料庫 ai_rules
   let activePresetBtn = document.querySelector(".pnf-preset-btn.active-preset");
   let activeStretchTitle = activePresetBtn?.dataset.title || "胸大肌門框 PNF 拉伸";
   let activeDbRule = activePresetBtn?.dataset.aiRules ? JSON.parse(activePresetBtn.dataset.aiRules) : null;
 
-  // 核心：優先採用資料庫規則，若無則依關鍵字從備援庫搜尋
   function getCurrentRule() {
     if (activeDbRule && activeDbRule.left && activeDbRule.right) {
       return activeDbRule;
@@ -289,12 +328,10 @@
     return PNF_RULES_BY_KEYWORD.find(r => r.keywords.some(k => activeStretchTitle.includes(k))) || DEFAULT_RULE;
   }
 
-  // 讀取當前課程右側指南的完整文字
   function getActiveGuideText() {
     return document.getElementById("pnf-guide-steps-list")?.innerText || "";
   }
 
-  // 初始化 MediaPipe Pose Landmarker
   async function ensureLandmarker() {
     if (poseLandmarker) return;
     feedbackSubtext.innerText = "正在載入 AI 骨骼辨識模型...";
@@ -318,7 +355,6 @@
     return Math.round(deg);
   }
 
-  // 嚴格評估當前幀是否符合該 PNF 動作與執行指南的條件
   function evaluateFrame(landmarks) {
     const rule = getCurrentRule();
     const guideText = getActiveGuideText();
@@ -330,25 +366,22 @@
     const rScore = rPts.reduce((s, p) => s + (p?.visibility || 0), 0);
     const pts = lScore >= rScore ? lPts : rPts;
 
-    // 1. 檢查目標關節是否清晰入鏡
     if (pts.some(p => !p || p.visibility < 0.6)) {
       jointReadout.innerText = `Angle: --° | Target: ${rule.comparator}${rule.target}°`;
       return {
         valid: false,
         msg: rule.requireLowerBody
-          ? "❌ 姿勢錯誤：此為下半身動作，請確保髖, 膝, 腳踝完整入鏡"
+          ? "❌ 姿勢錯誤：此為下半身動作，請確保髖、膝、腳踝完整入鏡"
           : "❌ 姿勢錯誤：未偵測到該動作所需的目標關節"
       };
     }
 
-    // 2. 檢查「坐姿 / 仰臥 vs 站姿」
     const hipAngle = calcAngle(landmarks[11], landmarks[23], landmarks[25]);
     if ((combinedText.includes("坐姿") || combinedText.includes("仰臥")) && hipAngle > 155) {
       jointReadout.innerText = `Wrong Posture (Standing) | Need Seated/Supine`;
       return { valid: false, msg: `❌ 姿勢錯誤：指南要求「坐姿/仰臥」，但偵測到站立姿勢` };
     }
 
-    // 3. 檢查「高舉過頭」條件
     if (rule.requireOverhead || combinedText.includes("高舉") || combinedText.includes("過頭")) {
       const lArmRaise = calcAngle(landmarks[13], landmarks[11], landmarks[23]);
       const rArmRaise = calcAngle(landmarks[14], landmarks[12], landmarks[24]);
@@ -359,7 +392,6 @@
       }
     }
 
-    // 4. 檢查「手臂伸直」條件
     if (rule.requireArmStraight || combinedText.includes("手臂伸直")) {
       const lElbow = calcAngle(landmarks[11], landmarks[13], landmarks[15]);
       const rElbow = calcAngle(landmarks[12], landmarks[14], landmarks[16]);
@@ -370,7 +402,6 @@
       }
     }
 
-    // 5. 檢查「高跪姿」條件
     if (rule.requireKneeling || combinedText.includes("高跪")) {
       const lKnee = calcAngle(landmarks[23], landmarks[25], landmarks[27]);
       const rKnee = calcAngle(landmarks[24], landmarks[26], landmarks[28]);
@@ -380,13 +411,11 @@
       }
     }
 
-    // 6. 計算目標關節夾角並比對
     const angle = calcAngle(pts[0], pts[1], pts[2]);
     jointReadout.innerText = `Angle: ${angle}° | Target: ${rule.comparator}${rule.target}°`;
 
     const passed = rule.comparator === ">=" ? (angle >= rule.target) : (angle <= rule.target);
 
-    // 預備階段（STEP 1）允許 ±12° 緩衝
     const phaseText = (document.getElementById("pnf-phase-badge")?.innerText || "").toUpperCase();
     const isPrep = phaseText.includes("PREP") || phaseText.includes("預備");
     if (isPrep) {
@@ -397,7 +426,6 @@
       return { valid: true, msg: `✅ 預備姿勢正確（${angle}°），準備進入拉伸` };
     }
 
-    // 7. 拉伸與保持階段：嚴格達標才倒數
     if (passed) {
       return { valid: true, msg: `🔥 姿勢正確並保持中（${angle}°），計時進行中！` };
     } else {
@@ -411,26 +439,29 @@
     feedbackSubtext.innerText = msg;
 
     if (finalValid) {
-      holdDot.className = "w-2 h-2 rounded-full bg-emerald-400 animate-ping";
+      holdDot.className = "w-2 h-2 rounded-full bg-emerald-400 animate-ping shrink-0";
       holdStatusText.innerText = "HOLDING · 計時進行中";
-      holdBadge.className = "px-3 py-1 rounded-full text-xs font-bold bg-emerald-950/90 text-emerald-400 border border-emerald-500/50 backdrop-blur-md flex items-center gap-2";
+      holdBadge.className = "px-2.5 py-1 rounded-full text-[10px] sm:text-xs font-bold bg-emerald-950/90 text-emerald-400 border border-emerald-500/50 backdrop-blur-md flex items-center gap-1.5 truncate";
       viewportFrame.classList.remove("border-gray-800", "border-red-500/80");
       viewportFrame.classList.add("border-emerald-500/80");
     } else {
-      holdDot.className = "w-2 h-2 rounded-full bg-red-500";
+      holdDot.className = "w-2 h-2 rounded-full bg-red-500 shrink-0";
       holdStatusText.innerText = "WRONG POSTURE · 計時暫停";
-      holdBadge.className = "px-3 py-1 rounded-full text-xs font-bold bg-red-950/90 text-red-400 border border-red-500/60 backdrop-blur-md flex items-center gap-2";
+      holdBadge.className = "px-2.5 py-1 rounded-full text-[10px] sm:text-xs font-bold bg-red-950/90 text-red-400 border border-red-500/60 backdrop-blur-md flex items-center gap-1.5 truncate";
       viewportFrame.classList.remove("border-gray-800", "border-emerald-500/80");
       viewportFrame.classList.add("border-red-500/80");
     }
   }
 
   function renderPhotoLandmarks(lm, isValid) {
+    lastPhotoValid = isValid;
     const boxW = viewportFrame.clientWidth || 640;
     const boxH = viewportFrame.clientHeight || 360;
     canvas.width = boxW;
     canvas.height = boxH;
     ctx.clearRect(0, 0, boxW, boxH);
+
+    if (!photoImg.naturalWidth || !photoImg.naturalHeight) return;
 
     const imgRatio = photoImg.naturalWidth / photoImg.naturalHeight;
     const boxRatio = boxW / boxH;
@@ -456,6 +487,15 @@
       lineWidth: 3
     });
     drawingUtils.drawLandmarks(mapped, { color: "#FFFFFF", radius: 4 });
+  }
+
+  if (typeof ResizeObserver !== "undefined") {
+    const ro = new ResizeObserver(() => {
+      if (!photoImg.classList.contains("hidden") && lastDetectedLandmarks) {
+        renderPhotoLandmarks(lastDetectedLandmarks, lastPhotoValid);
+      }
+    });
+    ro.observe(viewportFrame);
   }
 
   function videoDetectLoop() {
@@ -521,8 +561,8 @@
       photoImg.classList.add("hidden");
       video.classList.remove("hidden");
       canvas.classList.add("-scale-x-100");
-      document.getElementById("ai-btn-cam").className = "px-2.5 py-1 rounded-lg text-[11px] font-bold bg-indigo-600 text-white transition";
-      document.getElementById("ai-btn-photo").className = "cursor-pointer px-2.5 py-1 rounded-lg text-[11px] font-bold bg-gray-800 hover:bg-gray-700 text-gray-300 border border-gray-700 transition";
+      document.getElementById("ai-btn-cam").className = "min-h-[32px] px-2.5 py-1 rounded-lg text-[11px] font-bold bg-indigo-600 hover:bg-indigo-500 text-white transition inline-flex items-center gap-1";
+      document.getElementById("ai-btn-photo").className = "min-h-[32px] cursor-pointer px-2.5 py-1 rounded-lg text-[11px] font-bold bg-[#1b1e2b] hover:bg-gray-700 text-gray-200 border border-gray-700 transition inline-flex items-center gap-1";
       await startCamera();
     }
   };
@@ -539,8 +579,8 @@
     video.classList.add("hidden");
     photoImg.classList.remove("hidden");
     canvas.classList.remove("-scale-x-100");
-    document.getElementById("ai-btn-cam").className = "px-2.5 py-1 rounded-lg text-[11px] font-bold bg-gray-800 hover:bg-gray-700 text-gray-300 border border-gray-700 transition";
-    document.getElementById("ai-btn-photo").className = "cursor-pointer px-2.5 py-1 rounded-lg text-[11px] font-bold bg-indigo-600 text-white transition";
+    document.getElementById("ai-btn-cam").className = "min-h-[32px] px-2.5 py-1 rounded-lg text-[11px] font-bold bg-[#1b1e2b] hover:bg-gray-700 text-gray-200 border border-gray-700 transition inline-flex items-center gap-1";
+    document.getElementById("ai-btn-photo").className = "min-h-[32px] cursor-pointer px-2.5 py-1 rounded-lg text-[11px] font-bold bg-indigo-600 hover:bg-indigo-500 text-white transition inline-flex items-center gap-1";
     feedbackSubtext.innerText = `正在讀取照片「${file.name}」並載入 AI 模型...`;
 
     const reader = new FileReader();
@@ -627,10 +667,10 @@
     isAiSessionActive = false;
     isSimulatedHold = false;
     stopCamera();
-    holdDot.className = "w-2 h-2 rounded-full bg-gray-500";
+    holdDot.className = "w-2 h-2 rounded-full bg-gray-400 shrink-0";
     holdStatusText.innerText = "AI Standby (Click Start)";
-    holdBadge.className = "px-3 py-1 rounded-full text-xs font-bold bg-black/80 text-gray-300 border border-gray-700 backdrop-blur-md flex items-center gap-2";
-    viewportFrame.className = "relative z-10 w-full aspect-video bg-black rounded-2xl overflow-hidden border-2 border-gray-800 flex items-center justify-center shadow-inner transition-colors duration-300";
+    holdBadge.className = "px-2.5 py-1 rounded-full text-[10px] sm:text-xs font-bold bg-black/85 text-gray-200 border border-gray-700/90 backdrop-blur-md flex items-center gap-1.5 truncate";
+    viewportFrame.className = "relative z-10 w-full pnf-media-box bg-[#050609] rounded-2xl overflow-hidden border border-gray-800 flex items-center justify-center shadow-inner transition-colors duration-300";
     if (typeof origReset === "function") origReset();
   };
 
