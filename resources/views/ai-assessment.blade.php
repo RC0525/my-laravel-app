@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="csrf-token" content="{{ csrf_token() }}">
-  <title>PNF Posture Lab - 全身多維度 AI 體態快篩與處方推薦</title>
+  <title data-i18n="lab.page_title">PNF Posture Lab - 全身多維度 AI 體態快篩與處方推薦</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <script>
@@ -46,28 +46,34 @@
         <i class="fa-solid fa-person-rays"></i>
       </div>
       <div class="min-w-0">
-        <h1 class="text-sm sm:text-base font-bold text-white truncate">PNF Posture Lab · 全身 AI 體態實驗室</h1>
-        <p class="text-[11px] sm:text-xs text-gray-400 leading-snug sm:truncate">多維度關節角度快篩（頭頸、肩胸、骨盆、膝關節、左右對稱度）與 PNF 處方推薦</p>
+        <h1 data-i18n="lab.header_title" class="text-sm sm:text-base font-bold text-white truncate">PNF Posture Lab · 全身 AI 體態實驗室</h1>
+        <p data-i18n="lab.header_subtitle" class="text-[11px] sm:text-xs text-gray-400 leading-snug sm:truncate">多維度關節角度快篩（頭頸、肩胸、骨盆、膝關節、左右對稱度）與 PNF 處方推薦</p>
       </div>
     </div>
-    <a href="/" class="self-start sm:self-auto shrink-0 min-h-[38px] px-3.5 py-2 rounded-xl bg-cardDark hover:bg-gray-800 border border-gray-700 text-xs font-semibold text-gray-300 transition inline-flex items-center gap-2">
-      <i class="fa-solid fa-arrow-left"></i> 返回主訓練系統
-    </a>
+
+    <div class="flex items-center gap-2 self-start sm:self-auto shrink-0">
+      <button id="btn-toggle-lang" type="button" class="min-h-[38px] px-3.5 py-2 rounded-xl bg-cardDark hover:bg-gray-800 border border-goldAccent/40 text-xs font-bold text-goldAccent transition inline-flex items-center gap-1.5">
+        <i class="fa-solid fa-language"></i> <span id="lab-lang-label">EN / 中文</span>
+      </button>
+      <a href="/" class="min-h-[38px] px-3.5 py-2 rounded-xl bg-cardDark hover:bg-gray-800 border border-gray-700 text-xs font-semibold text-gray-300 transition inline-flex items-center gap-2">
+        <i class="fa-solid fa-arrow-left"></i> <span data-i18n="lab.back_home">返回主訓練系統</span>
+      </a>
+    </div>
   </div>
 
   <!-- 主版面：手機 1 欄、iPad 橫向與桌面 3 欄 -->
   <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 text-white">
-  
+
     <!-- 左側：即時 AI 視覺辨識與照片上傳區 -->
     <div class="lg:col-span-2 bg-cardDark p-3 sm:p-4 rounded-2xl border border-gray-800 min-w-0">
       <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 mb-3">
         <!-- 來源切換控制列 -->
         <div class="flex flex-wrap items-center gap-2">
           <button id="btn-source-cam" type="button" class="min-h-[36px] px-3 py-1.5 rounded-lg text-xs font-bold bg-indigo-600 text-white transition inline-flex items-center gap-1.5">
-            <i class="fa-solid fa-video"></i> 即時攝影機
+            <i class="fa-solid fa-video"></i> <span data-i18n="lab.live_cam">即時攝影機</span>
           </button>
           <label for="photo-upload" id="btn-source-photo" class="min-h-[36px] cursor-pointer px-3 py-1.5 rounded-lg text-xs font-bold bg-gray-800 hover:bg-gray-700 text-gray-300 border border-gray-700 transition inline-flex items-center gap-1.5">
-            <i class="fa-solid fa-image"></i> 上傳全身照片檢測
+            <i class="fa-solid fa-image"></i> <span data-i18n="lab.upload_photo_btn">上傳全身照片檢測</span>
           </label>
           <input type="file" id="photo-upload" accept="image/*" class="hidden">
         </div>
@@ -78,16 +84,16 @@
       <div id="lab-media-container" class="lab-media-box bg-black rounded-xl overflow-hidden border border-gray-800 flex items-center justify-center">
         <!-- 即時攝影機畫面 -->
         <video id="webcam" autoplay playsinline class="w-full h-full object-cover -scale-x-100"></video>
-        
+
         <!-- 靜態上傳照片預覽 -->
         <img id="uploaded-photo" class="hidden w-full h-full object-contain" alt="Uploaded Posture">
-        
+
         <!-- 骨架繪製畫布 -->
         <canvas id="output_canvas" class="absolute inset-0 w-full h-full pointer-events-none -scale-x-100"></canvas>
-        
+
         <!-- 畫面底部引導與進度條 -->
         <div id="overlay-banner" class="absolute bottom-2.5 left-2.5 right-2.5 sm:bottom-4 sm:left-4 sm:right-4 bg-black/80 backdrop-blur-md border border-gray-700 text-white p-2.5 sm:p-3.5 rounded-xl text-center">
-          <p id="guide-text" class="text-xs sm:text-sm font-bold">正在初始化 AI 視覺引擎...</p>
+          <p id="guide-text" data-i18n="lab.init_ai" class="text-xs sm:text-sm font-bold">正在初始化 AI 視覺引擎...</p>
           <div id="progress-bar-container" class="w-full bg-gray-800 h-2 rounded-full mt-2 hidden">
             <div id="scan-progress" class="bg-emerald-400 h-2 rounded-full transition-all duration-100" style="width: 0%"></div>
           </div>
@@ -101,12 +107,12 @@
             <i class="fa-solid fa-cloud-arrow-up text-base"></i>
           </div>
           <div class="min-w-0">
-            <p class="text-xs font-bold text-white">上傳全身姿勢照片進行 AI 檢測</p>
-            <p class="text-[11px] text-gray-400 leading-snug">支援 JPG / PNG / WEBP；建議雙手自然下垂，可直接點擊按鈕或拖曳照片至此</p>
+            <p data-i18n="lab.dropzone_title" class="text-xs font-bold text-white">上傳全身姿勢照片進行 AI 檢測</p>
+            <p data-i18n="lab.dropzone_desc" class="text-[11px] text-gray-400 leading-snug">支援 JPG / PNG / WEBP；建議雙手自然下垂，可直接點擊按鈕或拖曳照片至此</p>
           </div>
         </div>
         <button type="button" id="btn-trigger-photo-upload" class="shrink-0 w-full sm:w-auto min-h-[38px] px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold transition flex items-center justify-center gap-1.5 shadow">
-          <i class="fa-solid fa-folder-open"></i> 選擇照片上傳
+          <i class="fa-solid fa-folder-open"></i> <span data-i18n="lab.choose_photo">選擇照片上傳</span>
         </button>
       </div>
     </div>
@@ -116,17 +122,17 @@
       <div>
         <div class="flex items-center justify-between gap-2 mb-3 sm:mb-4">
           <h2 class="text-base sm:text-lg font-bold flex items-center gap-2">
-            <i class="fa-solid fa-robot text-indigo-400"></i> AI 全身姿態診斷
+            <i class="fa-solid fa-robot text-indigo-400"></i> <span data-i18n="lab.diag_title">AI 全身姿態診斷</span>
           </h2>
-          <span id="mode-badge" class="shrink-0 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30">
+          <span id="mode-badge" data-i18n="lab.mode_badge" class="shrink-0 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30">
             全身快篩
           </span>
         </div>
 
         <!-- 預設提示說明 -->
         <div id="scanning-placeholder" class="p-3.5 sm:p-4 rounded-xl bg-gray-900/60 border border-gray-800 text-xs text-gray-400 leading-relaxed mb-4 space-y-2">
-          <p><strong class="text-gray-200">方式 1（即時鏡頭）：</strong>全身站立於鏡頭前 1.5～2.5 公尺處，雙手自然下垂，系統將自動進行 5 秒多維度採樣。</p>
-          <p><strong class="text-gray-200">方式 2（上傳照片）：</strong>使用上方或下方「選擇照片上傳」／拖放區上傳包含頭、肩、髖、膝、踝的全身照，系統將自動識別所有潛在體態問題。</p>
+          <p><strong class="text-gray-200" data-i18n="lab.method1_label">方式 1（即時鏡頭）：</strong><span data-i18n="lab.method1_desc">全身站立於鏡頭前 1.5～2.5 公尺處，雙手自然下垂，系統將自動進行 5 秒多維度採樣。</span></p>
+          <p><strong class="text-gray-200" data-i18n="lab.method2_label">方式 2（上傳照片）：</strong><span data-i18n="lab.method2_desc">使用上方或下方「選擇照片上傳」／拖放區上傳包含頭、肩、髖、膝、踝的全身照，系統將自動識別所有潛在體態問題。</span></p>
         </div>
 
         <!-- 快篩結果與全部問題識別卡片 -->
@@ -134,15 +140,15 @@
           <!-- 多維度量化數據 -->
           <div class="p-3 sm:p-3.5 rounded-xl bg-gray-900/80 border border-gray-800 grid grid-cols-3 gap-2 text-center">
             <div>
-              <p class="text-[10px] text-gray-400">頭肩夾角</p>
+              <p data-i18n="lab.metric_neck" class="text-[10px] text-gray-400">頭肩夾角</p>
               <p id="avg-neck-angle" class="text-xs sm:text-sm font-bold text-white mt-0.5">--°</p>
             </div>
             <div>
-              <p class="text-[10px] text-gray-400">骨盆髖角</p>
+              <p data-i18n="lab.metric_pelvic" class="text-[10px] text-gray-400">骨盆髖角</p>
               <p id="avg-pelvic-angle" class="text-xs sm:text-sm font-bold text-white mt-0.5">--°</p>
             </div>
             <div>
-              <p class="text-[10px] text-gray-400">膝關節角</p>
+              <p data-i18n="lab.metric_knee" class="text-[10px] text-gray-400">膝關節角</p>
               <p id="avg-knee-angle" class="text-xs sm:text-sm font-bold text-white mt-0.5">--°</p>
             </div>
           </div>
@@ -158,13 +164,87 @@
       </div>
 
       <button id="btn-reset" type="button" class="mt-4 sm:mt-6 min-h-[42px] w-full py-2.5 border border-gray-700 text-gray-300 text-xs font-semibold rounded-xl hover:bg-gray-800 transition">
-        重置並重新檢測
+        <span data-i18n="lab.reset_btn">重置並重新檢測</span>
       </button>
     </div>
   </div>
 
   <script type="module">
     import { PoseLandmarker, FilesetResolver, DrawingUtils } from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14";
+
+    const LAB_I18N = {
+      zh: {
+        "lab.page_title": "PNF Posture Lab - 全身多維度 AI 體態快篩與處方推薦",
+        "lab.header_title": "PNF Posture Lab · 全身 AI 體態實驗室",
+        "lab.header_subtitle": "多維度關節角度快篩（頭頸、肩胸、骨盆、膝關節、左右對稱度）與 PNF 處方推薦",
+        "lab.back_home": "返回主訓練系統",
+        "lab.live_cam": "即時攝影機",
+        "lab.upload_photo_btn": "上傳全身照片檢測",
+        "lab.init_ai": "正在初始化 AI 視覺引擎...",
+        "lab.dropzone_title": "上傳全身姿勢照片進行 AI 檢測",
+        "lab.dropzone_desc": "支援 JPG / PNG / WEBP；建議雙手自然下垂，可直接點擊按鈕或拖曳照片至此",
+        "lab.choose_photo": "選擇照片上傳",
+        "lab.diag_title": "AI 全身姿態診斷",
+        "lab.mode_badge": "全身快篩",
+        "lab.method1_label": "方式 1（即時鏡頭）：",
+        "lab.method1_desc": "全身站立於鏡頭前 1.5～2.5 公尺處，雙手自然下垂，系統將自動進行 5 秒多維度採樣。",
+        "lab.method2_label": "方式 2（上傳照片）：",
+        "lab.method2_desc": "使用上方或下方「選擇照片上傳」／拖放區上傳包含頭、肩、髖、膝、踝的全身照，系統將自動識別所有潛在體態問題。",
+        "lab.metric_neck": "頭肩夾角",
+        "lab.metric_pelvic": "骨盆髖角",
+        "lab.metric_knee": "膝關節角",
+        "lab.reset_btn": "重置並重新檢測"
+      },
+      en: {
+        "lab.page_title": "PNF Posture Lab - Full-Body Multi-Angle AI Posture Screen & Prescription",
+        "lab.header_title": "PNF Posture Lab · Full-Body AI Posture Studio",
+        "lab.header_subtitle": "Multi-joint angle screening (head/neck, shoulder/chest, pelvis, knee, left-right symmetry) & PNF prescription",
+        "lab.back_home": "Back to Main App",
+        "lab.live_cam": "Live Cam",
+        "lab.upload_photo_btn": "Upload Full-Body Photo",
+        "lab.init_ai": "Initializing AI vision engine...",
+        "lab.dropzone_title": "Upload a full-body posture photo for AI screening",
+        "lab.dropzone_desc": "Supports JPG / PNG / WEBP; keep arms relaxed at your sides. Click the button or drag and drop a photo here.",
+        "lab.choose_photo": "Choose Photo",
+        "lab.diag_title": "AI Full-Body Posture Diagnosis",
+        "lab.mode_badge": "Full-Body Screen",
+        "lab.method1_label": "Method 1 (Live Camera): ",
+        "lab.method1_desc": "Stand 1.5–2.5 m from the camera with arms relaxed at your sides for an automatic 5-second multi-angle scan.",
+        "lab.method2_label": "Method 2 (Photo Upload): ",
+        "lab.method2_desc": "Use 'Choose Photo' or the dropzone to upload a full-body photo showing head, shoulders, hips, knees, and ankles to detect all potential issues.",
+        "lab.metric_neck": "Head-Shoulder",
+        "lab.metric_pelvic": "Pelvic-Hip",
+        "lab.metric_knee": "Knee Angle",
+        "lab.reset_btn": "Reset & Rescan"
+      }
+    };
+
+    const STRETCH_EN_MAP = {
+      "胸大肌門框 PNF 拉伸": "Doorway Pectoralis Major PNF Stretch",
+      "髂腰肌高跪姿 PNF 伸展": "Kneeling Iliopsoas PNF Stretch",
+      "臀大肌仰臥抱膝 PNF 伸展": "Supine Gluteus Maximus PNF Stretch",
+      "腓腸肌推牆直膝 PNF 伸展": "Wall Calf Gastrocnemius PNF Stretch",
+      "斜方肌上束側傾 PNF 伸展": "Seated Upper Trapezius PNF Stretch",
+      "腹外斜肌側彎 PNF 伸展": "Seated Trunk Oblique PNF Stretch"
+    };
+
+    function detectLabLang() {
+      const raw = window.currentLang || document.documentElement.lang || localStorage.getItem("lang") || localStorage.getItem("locale") || "zh";
+      return String(raw).toLowerCase().startsWith("en") ? "en" : "zh";
+    }
+
+    function isLabEn() {
+      return detectLabLang() === "en";
+    }
+
+    function setLabLang(lang) {
+      const normalized = String(lang).toLowerCase().startsWith("en") ? "en" : "zh";
+      window.currentLang = normalized;
+      document.documentElement.lang = normalized === "en" ? "en" : "zh-Hant";
+      localStorage.setItem("lang", normalized);
+      localStorage.setItem("locale", normalized);
+      applyLabLang();
+    }
 
     const video = document.getElementById("webcam");
     const uploadedPhoto = document.getElementById("uploaded-photo");
@@ -187,6 +267,7 @@
     let lastVideoTime = -1;
     let currentRunningMode = "VIDEO";
     let lastPhotoLandmarks = null;
+    let lastSummaryForRender = null;
 
     let currentMode = "ASSESSMENT";
     const SCAN_DURATION_MS = 5000;
@@ -201,6 +282,46 @@
       lowConfidenceCount: 0,
       totalCount: 0
     };
+
+    function formatAngleReadout(neckAngle, pelvicAngle, kneeAngle, relTagZh, relTagEn) {
+      const isEn = isLabEn();
+      const nVal = neckAngle !== null && neckAngle !== undefined ? `${neckAngle}°` : "--°";
+      const pVal = pelvicAngle !== null && pelvicAngle !== undefined ? `${pelvicAngle}°` : "--°";
+      const kVal = kneeAngle !== null && kneeAngle !== undefined ? `${kneeAngle}°` : "--°";
+      const tag = isEn ? (relTagEn || "") : (relTagZh || "");
+      return isEn
+        ? `Neck: ${nVal}${tag} | Pelvis: ${pVal} | Knee: ${kVal}`
+        : `頭肩: ${nVal}${tag} | 骨盆: ${pVal} | 膝角: ${kVal}`;
+    }
+
+    function applyLabLang() {
+      const isEn = isLabEn();
+      const dict = LAB_I18N[isEn ? "en" : "zh"];
+
+      document.querySelectorAll("[data-i18n]").forEach((el) => {
+        const key = el.getAttribute("data-i18n");
+        if (dict[key] && el.textContent !== dict[key]) {
+          el.textContent = dict[key];
+        }
+      });
+
+      const currentAngleText = angleReadout.innerText || "";
+      const nMatch = currentAngleText.match(/(?:頭肩|Neck):\s*([0-9]+°|--°)/i);
+      const pMatch = currentAngleText.match(/(?:骨盆|Pelvis):\s*([0-9]+°|--°)/i);
+      const kMatch = currentAngleText.match(/(?:膝角|Knee):\s*([0-9]+°|--°)/i);
+      const hasLowRel = currentAngleText.includes("可信度中") || currentAngleText.toLowerCase().includes("med conf");
+      angleReadout.innerText = isEn
+        ? `Neck: ${nMatch?.[1] || "--°"}${hasLowRel ? " (Arm offset·Med conf)" : ""} | Pelvis: ${pMatch?.[1] || "--°"} | Knee: ${kMatch?.[1] || "--°"}`
+        : `頭肩: ${nMatch?.[1] || "--°"}${hasLowRel ? " (手臂偏移·可信度中)" : ""} | 骨盆: ${pMatch?.[1] || "--°"} | 膝角: ${kMatch?.[1] || "--°"}`;
+
+      if (lastSummaryForRender) {
+        renderAllIssuesAndRecommendations(lastSummaryForRender);
+      }
+    }
+
+    document.getElementById("btn-toggle-lang").addEventListener("click", () => {
+      setLabLang(isLabEn() ? "zh" : "en");
+    });
 
     if (btnTriggerPhoto && photoInput) {
       btnTriggerPhoto.addEventListener("click", () => photoInput.click());
@@ -233,7 +354,7 @@
     }
 
     async function initPoseLandmarker() {
-      guideText.innerText = "正在載入 AI 全身骨架模型...";
+      guideText.innerText = isLabEn() ? "Loading AI full-body skeleton model..." : "正在載入 AI 全身骨架模型...";
       const vision = await FilesetResolver.forVisionTasks(
         "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm"
       );
@@ -255,7 +376,7 @@
           currentRunningMode = "VIDEO";
         }
         if (!webcamStream) {
-          guideText.innerText = "正在請求攝影機權限...";
+          guideText.innerText = isLabEn() ? "Requesting camera permission..." : "正在請求攝影機權限...";
           webcamStream = await navigator.mediaDevices.getUserMedia({ video: true });
           video.srcObject = webcamStream;
           video.onloadeddata = () => {
@@ -266,7 +387,9 @@
           };
         }
       } catch (err) {
-        guideText.innerText = "⚠️ 無法開啟攝影機，您仍可使用「選擇照片上傳」功能";
+        guideText.innerText = isLabEn()
+          ? "⚠️ Unable to access camera. You can still use 'Choose Photo'."
+          : "⚠️ 無法開啟攝影機，您仍可使用「選擇照片上傳」功能";
         console.error(err);
       }
     };
@@ -290,46 +413,63 @@
       return Math.round(deg);
     }
 
-    // 評估手臂是否彎曲/叉腰導致肩肘關鍵點偏移（影響頭肩角）
+    function hasValidPoint(pt, minVis = 0.25) {
+      if (!pt) return false;
+      const inBounds = pt.x >= 0 && pt.x <= 1 && pt.y >= 0.03 && pt.y <= 0.99;
+      return inBounds && ((pt.visibility ?? 0.5) >= minVis);
+    }
+
     function checkArmReliability(lm, isLeft) {
       const shoulder = lm[isLeft ? 11 : 12];
       const elbow = lm[isLeft ? 13 : 14];
       const wrist = lm[isLeft ? 15 : 16];
-      const hip = lm[isLeft ? 23 : 24];
 
-      if (!shoulder || !elbow || !wrist || (shoulder.visibility ?? 0) < 0.55) {
-        return { reliable: false, reason: "肩部關鍵點能見度偏低" };
-      }
-
-      const elbowVis = (elbow.visibility ?? 0) >= 0.5;
-      const wristVis = (wrist.visibility ?? 0) >= 0.5;
-      const elbowAngle = (elbowVis && wristVis) ? getAngle(shoulder, elbow, wrist) : 180;
-      const wristNearHip = (hip && wristVis) ? Math.hypot(wrist.x - hip.x, wrist.y - hip.y) < 0.16 : false;
-      const armRaised = elbowVis ? (elbow.y - shoulder.y) < -0.04 : false;
-
-      if (!elbowVis || !wristVis || elbowAngle < 155 || wristNearHip || armRaised) {
+      if (!shoulder || !elbow || !wrist || (shoulder.visibility ?? 0) < 0.5) {
         return {
           reliable: false,
-          reason: "手臂彎曲/叉腰或手部遮擋可能使肩部關鍵點偏移，導致頭肩角偏低（如 ~126°）"
+          reasonZh: "肩部關鍵點能見度偏低",
+          reasonEn: "Shoulder landmark visibility is low."
         };
       }
 
-      return { reliable: true, reason: "" };
+      const elbowVis = (elbow.visibility ?? 0) >= 0.45;
+      const wristVis = (wrist.visibility ?? 0) >= 0.45;
+      const elbowAngle = (elbowVis && wristVis) ? getAngle(shoulder, elbow, wrist) : 175;
+      const armRaisedHigh = elbowVis ? (elbow.y - shoulder.y) < -0.08 : false;
+
+      if (elbowAngle < 135 || armRaisedHigh) {
+        return {
+          reliable: false,
+          reasonZh: "偵測到手臂明顯彎曲或抬高，可能影響肩部關鍵點位置，建議雙手自然下垂再測",
+          reasonEn: "Noticeable arm bending or elevation detected, which may shift shoulder landmarks. Retest with arms relaxed."
+        };
+      }
+
+      return { reliable: true, reasonZh: "", reasonEn: "" };
     }
 
-    // 檢查即時鏡頭全身入鏡與距離狀態
     function checkLiveFraming(lm) {
+      const isEn = isLabEn();
       const visPts = lm.filter((pt) => pt && (pt.visibility ?? 0) >= 0.5);
       if (visPts.length < 10) {
-        return { ok: false, msg: "❌ 未偵測到完整全身：請調整鏡頭角度，讓全身完整入鏡" };
+        return {
+          ok: false,
+          msg: isEn ? "❌ Full body not detected: adjust camera so your full body is visible." : "❌ 未偵測到完整全身：請調整鏡頭角度，讓全身完整入鏡"
+        };
       }
       const ys = visPts.map((pt) => pt.y);
       const bodyHeightRatio = Math.max(...ys) - Math.min(...ys);
       if (bodyHeightRatio < 0.35) {
-        return { ok: false, msg: "📏 距離鏡頭太遠：請往前走近約 1.5～2 公尺，讓身體佔畫面約 50%～75%" };
+        return {
+          ok: false,
+          msg: isEn ? "📏 Too far from camera: move closer (~1.5–2 m) so your body fills ~50%–75% of the frame." : "📏 距離鏡頭太遠：請往前走近約 1.5～2 公尺，讓身體佔畫面約 50%～75%"
+        };
       }
       if (Math.min(...ys) < 0.03 || Math.max(...ys) > 0.97) {
-        return { ok: false, msg: "📐 部分身體超出畫面邊緣：請微調距離，確保頭部與雙腳完整入鏡" };
+        return {
+          ok: false,
+          msg: isEn ? "📐 Part of body is out of frame: adjust distance so head and feet stay inside." : "📐 部分身體超出畫面邊緣：請微調距離，確保頭部與雙腳完整入鏡"
+        };
       }
       return { ok: true, msg: "" };
     }
@@ -342,26 +482,28 @@
       const useLeft = leftScore >= rightScore;
       const chosen = useLeft ? leftSide : rightSide;
 
-      const coreVisible = chosen.slice(0, 4).every((pt) => pt && pt.visibility > 0.55);
-      const ankleVisible = chosen[4] && chosen[4].visibility > 0.5;
-
       const ear = chosen[0];
       const shoulder = chosen[1];
       const hip = chosen[2];
       const knee = chosen[3];
       const ankle = chosen[4];
 
-      const neckAngle = coreVisible ? getAngle(ear, shoulder, hip) : null;
-      const pelvicAngle = coreVisible ? getAngle(shoulder, hip, knee) : null;
-      const kneeAngle = (coreVisible && ankleVisible) ? getAngle(hip, knee, ankle) : null;
+      const upperCoreVisible = hasValidPoint(ear, 0.35) && hasValidPoint(shoulder, 0.35) && hasValidPoint(hip, 0.25);
+      const lowerCoreVisible = upperCoreVisible && hasValidPoint(knee, 0.22);
+      const ankleVisible = lowerCoreVisible && hasValidPoint(ankle, 0.2);
+
+      const neckAngle = upperCoreVisible ? getAngle(ear, shoulder, hip) : null;
+      const rawPelvicAngle = lowerCoreVisible ? getAngle(shoulder, hip, knee) : null;
+      const pelvicAngle = (rawPelvicAngle !== null && rawPelvicAngle < 135) ? null : rawPelvicAngle;
+      const kneeAngle = ankleVisible ? getAngle(hip, knee, ankle) : null;
 
       const armCheck = checkArmReliability(lm, useLeft);
 
-      const shoulderDiff = (lm[11] && lm[12] && lm[11].visibility > 0.5 && lm[12].visibility > 0.5)
+      const shoulderDiff = (hasValidPoint(lm[11], 0.35) && hasValidPoint(lm[12], 0.35))
         ? Math.round(Math.abs(lm[11].y - lm[12].y) * 100)
         : 0;
 
-      const hipDiff = (lm[23] && lm[24] && lm[23].visibility > 0.5 && lm[24].visibility > 0.5)
+      const hipDiff = (hasValidPoint(lm[23], 0.25) && hasValidPoint(lm[24], 0.25))
         ? Math.round(Math.abs(lm[23].y - lm[24].y) * 100)
         : 0;
 
@@ -370,84 +512,110 @@
         : 0;
 
       return {
-        coreVisible,
+        coreVisible: upperCoreVisible,
         neckAngle,
         pelvicAngle,
+        rawPelvicAngle,
         kneeAngle,
         shoulderDiff,
         hipDiff,
         forwardHeadOffset,
         neckReliable: armCheck.reliable,
-        neckWarning: armCheck.reason
+        neckWarningZh: armCheck.reasonZh,
+        neckWarningEn: armCheck.reasonEn
       };
     }
 
     function analyzeAllProblems(summary) {
+      const isEn = isLabEn();
       const issues = [];
       const lowRelNote = summary.neckLowReliability
-        ? "（註：偵測到手臂彎曲/叉腰或關節偏移，頭肩角可能偏低，建議雙手自然下垂重測以確認）"
+        ? (isEn
+          ? " (Note: arm posture may shift shoulder landmarks; retest with arms relaxed.)"
+          : "（註：手臂姿態可能影響肩部關鍵點，建議雙手自然下垂重測）")
         : "";
 
-      if (summary.neck !== null && summary.neck < 162) {
+      if (summary.neck !== null && summary.neck < 158) {
         issues.push({
-          title: "圓肩與頭部前傾（上交叉症候群）",
-          badge: summary.neckLowReliability ? "肩頸/胸椎 · 中可信度" : "肩頸/胸椎",
-          desc: `平均頭肩角為 ${summary.neck}°（標準參考約 162°），胸大肌與頸部肌群可能處於緊繃縮短狀態。${lowRelNote}`,
-          stretchTitle: "胸大肌門框 PNF 拉伸"
+          title: isEn ? "Rounded Shoulders & Forward Head (Upper Crossed)" : "圓肩與頭部前傾（上交叉症候群）",
+          badge: isEn ? "Neck/Thoracic" : "肩頸/胸椎",
+          desc: isEn
+            ? `Average head-shoulder angle is ${summary.neck}° (below ~158°); pectoralis major and neck muscles may be tight.${lowRelNote}`
+            : `平均頭肩角為 ${summary.neck}°（低於約 158°），胸大肌與頸部肌群可能處於緊繃縮短狀態。${lowRelNote}`,
+          stretchTitleZh: "胸大肌門框 PNF 拉伸",
+          stretchTitleEn: STRETCH_EN_MAP["胸大肌門框 PNF 拉伸"]
         });
       }
 
-      if (summary.pelvic !== null && summary.pelvic < 165) {
+      if (summary.pelvic !== null && summary.pelvic >= 135 && summary.pelvic < 163) {
         issues.push({
-          title: "骨盆前傾與髖屈肌緊繃",
-          badge: "髖部/骨盆",
-          desc: `平均軀幹髖角為 ${summary.pelvic}°（低於標準 165°），髂腰肌或股直肌可能過度緊繃。`,
-          stretchTitle: "髂腰肌高跪姿 PNF 伸展"
+          title: isEn ? "Anterior Pelvic Tilt & Tight Hip Flexors" : "骨盆前傾與髖屈肌緊繃",
+          badge: isEn ? "Hip/Pelvis" : "髖部/骨盆",
+          desc: isEn
+            ? `Average trunk-hip angle is ${summary.pelvic}° (135°–162° range); iliopsoas or rectus femoris may be tight.`
+            : `平均軀幹髖角為 ${summary.pelvic}°（介於 135°～162°），髂腰肌或股直肌可能過度緊繃。`,
+          stretchTitleZh: "髂腰肌高跪姿 PNF 伸展",
+          stretchTitleEn: STRETCH_EN_MAP["髂腰肌高跪姿 PNF 伸展"]
         });
       }
 
-      if (summary.pelvic !== null && summary.pelvic > 183) {
+      if (summary.pelvic !== null && summary.pelvic > 185) {
         issues.push({
-          title: "骨盆後傾與下背/臀腿張力異常",
-          badge: "腰椎/臀腿",
-          desc: `平均軀幹髖角為 ${summary.pelvic}°（高於標準 183°），建議放鬆下背與臀部肌群。`,
-          stretchTitle: "臀大肌仰臥抱膝 PNF 伸展"
+          title: isEn ? "Posterior Pelvic Tilt & Lower Back/Glute Tension" : "骨盆後傾與下背/臀腿張力異常",
+          badge: isEn ? "Lumbar/Glutes" : "腰椎/臀腿",
+          desc: isEn
+            ? `Average trunk-hip angle is ${summary.pelvic}° (above 185°); consider releasing lower back and glutes.`
+            : `平均軀幹髖角為 ${summary.pelvic}°（高於 185°），建議放鬆下背與臀部肌群。`,
+          stretchTitleZh: "臀大肌仰臥抱膝 PNF 伸展",
+          stretchTitleEn: STRETCH_EN_MAP["臀大肌仰臥抱膝 PNF 伸展"]
         });
       }
 
       if (summary.knee !== null && summary.knee > 178) {
         issues.push({
-          title: "膝關節超伸（Genu Recurvatum）",
-          badge: "膝關節/小腿",
-          desc: `平均膝關節夾角達 ${summary.knee}°（過度伸直），易造成膝蓋與小腿後側壓力。`,
-          stretchTitle: "腓腸肌推牆直膝 PNF 伸展"
+          title: isEn ? "Knee Hyperextension (Genu Recurvatum)" : "膝關節超伸（Genu Recurvatum）",
+          badge: isEn ? "Knee/Calf" : "膝關節/小腿",
+          desc: isEn
+            ? `Average knee angle is ${summary.knee}° (hyperextended), placing extra stress on knee and posterior calf.`
+            : `平均膝關節夾角達 ${summary.knee}°（過度伸直），易造成膝蓋與小腿後側壓力。`,
+          stretchTitleZh: "腓腸肌推牆直膝 PNF 伸展",
+          stretchTitleEn: STRETCH_EN_MAP["腓腸肌推牆直膝 PNF 伸展"]
         });
       }
 
-      if (summary.shoulderDiff >= 4) {
+      if (summary.shoulderDiff >= 5) {
         issues.push({
-          title: "高低肩與斜方肌/側軀幹張力不對稱",
-          badge: "左右對稱",
-          desc: `偵測到左右肩高度差指標為 ${summary.shoulderDiff}，建議針對緊繃側進行側屈與頸肩 PNF 伸展。`,
-          stretchTitle: "斜方肌上束側傾 PNF 伸展"
+          title: isEn ? "Uneven Shoulders & Lateral/Trapezius Asymmetry" : "高低肩與斜方肌/側軀幹張力不對稱",
+          badge: isEn ? "L/R Symmetry" : "左右對稱",
+          desc: isEn
+            ? `Left-right shoulder height offset index is ${summary.shoulderDiff}; consider side-bending and upper-trap PNF stretches.`
+            : `偵測到左右肩高度差指標為 ${summary.shoulderDiff}，建議針對緊繃側進行側屈與頸肩 PNF 伸展。`,
+          stretchTitleZh: "斜方肌上束側傾 PNF 伸展",
+          stretchTitleEn: STRETCH_EN_MAP["斜方肌上束側傾 PNF 伸展"]
         });
       }
 
-      if (summary.hipDiff >= 4) {
+      if (summary.hipDiff >= 5) {
         issues.push({
-          title: "骨盆高低差與腰方肌/腹外斜肌緊繃",
-          badge: "骨盆對稱",
-          desc: `偵測到左右髖部高度差指標為 ${summary.hipDiff}，建議進行軀幹側彎與髖部伸展。`,
-          stretchTitle: "腹外斜肌側彎 PNF 伸展"
+          title: isEn ? "Pelvic Height Asymmetry & Lateral Trunk Tightness" : "骨盆高低差與腰方肌/腹外斜肌緊繃",
+          badge: isEn ? "Pelvic Symmetry" : "骨盆對稱",
+          desc: isEn
+            ? `Left-right hip height offset index is ${summary.hipDiff}; consider lateral trunk and hip PNF stretches.`
+            : `偵測到左右髖部高度差指標為 ${summary.hipDiff}，建議進行軀幹側彎與髖部伸展。`,
+          stretchTitleZh: "腹外斜肌側彎 PNF 伸展",
+          stretchTitleEn: STRETCH_EN_MAP["腹外斜肌側彎 PNF 伸展"]
         });
       }
 
       if (issues.length === 0) {
         issues.push({
-          title: "整體體態排列良好（日常維持）",
-          badge: "狀態良好",
-          desc: "您的主要關節角度與對稱度皆在理想範圍內，建議透過 PNF 伸展維持關節活動度與肌肉彈性。",
-          stretchTitle: "胸大肌門框 PNF 拉伸"
+          title: isEn ? "Well-Aligned Posture (Daily Maintenance)" : "整體體態排列良好（日常維持）",
+          badge: isEn ? "Good Alignment" : "狀態良好",
+          desc: isEn
+            ? "Your key joint angles and symmetry are within target ranges. Use PNF stretching to maintain mobility and elasticity."
+            : "您的主要關節角度與對稱度皆在理想範圍內，建議透過 PNF 伸展維持關節活動度與肌肉彈性。",
+          stretchTitleZh: "胸大肌門框 PNF 拉伸",
+          stretchTitleEn: STRETCH_EN_MAP["胸大肌門框 PNF 拉伸"]
         });
       }
 
@@ -460,6 +628,9 @@
     }
 
     function renderAllIssuesAndRecommendations(summary) {
+      lastSummaryForRender = summary;
+      const isEn = isLabEn();
+
       document.getElementById("scanning-placeholder").classList.add("hidden");
       document.getElementById("avg-neck-angle").innerText = summary.neck !== null ? `${summary.neck}°` : "--°";
       document.getElementById("avg-pelvic-angle").innerText = summary.pelvic !== null ? `${summary.pelvic}°` : "--°";
@@ -467,12 +638,15 @@
       document.getElementById("assessment-result").classList.remove("hidden");
 
       if (summary.neckLowReliability) {
+        const warnText = isEn
+          ? (summary.neckWarningEn || "Bent/akimbo arms detected; shoulder landmarks may shift. Retest with arms relaxed.")
+          : (summary.neckWarningZh || "偵測到手臂彎曲/叉腰，肩部關鍵點可能偏移，建議雙手自然下垂重測。");
         reliabilityBanner.className = "p-2.5 sm:p-3 rounded-xl border border-amber-500/40 bg-amber-500/10 text-amber-200 text-[11px] leading-relaxed";
-        reliabilityBanner.innerHTML = `<i class="fa-solid fa-triangle-exclamation text-amber-400 mr-1"></i><strong>頭肩角可信度提醒：</strong>${summary.neckWarning || "偵測到手臂彎曲/叉腰，肩部關鍵點可能偏移，建議雙手自然下垂重測。"}`;
+        reliabilityBanner.innerHTML = `<i class="fa-solid fa-triangle-exclamation text-amber-400 mr-1"></i><strong>${isEn ? "Neck-Shoulder Confidence Note:" : "頭肩角可信度提醒："}</strong>${warnText}`;
         reliabilityBanner.classList.remove("hidden");
       } else {
         reliabilityBanner.className = "p-2.5 sm:p-3 rounded-xl border border-emerald-500/30 bg-emerald-500/10 text-emerald-300 text-[11px] leading-relaxed";
-        reliabilityBanner.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-400 mr-1"></i><strong>關節可信度高：</strong>雙手姿態與主要關節能見度良好，角度判讀穩定。`;
+        reliabilityBanner.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-400 mr-1"></i><strong>${isEn ? "High Joint Confidence:" : "關節可信度高："}</strong>${isEn ? "Arm position and key landmarks are clear and stable." : "雙手姿態與主要關節能見度良好，角度判讀穩定。"}`;
         reliabilityBanner.classList.remove("hidden");
       }
 
@@ -481,22 +655,23 @@
       listEl.innerHTML = "";
 
       issues.forEach((item) => {
+        const displayStretch = isEn ? item.stretchTitleEn : item.stretchTitleZh;
         const card = document.createElement("div");
         card.className = "p-3.5 rounded-xl border border-goldAccent/40 bg-goldAccent/10 space-y-2";
         card.innerHTML = `
           <div class="flex items-center justify-between gap-2 flex-wrap">
             <span class="text-[11px] font-bold px-2 py-0.5 rounded bg-goldAccent/20 text-goldAccent">${item.badge}</span>
-            <span class="text-[11px] text-gray-300 font-semibold">推薦：${item.stretchTitle}</span>
+            <span class="text-[11px] text-gray-300 font-semibold">${isEn ? "Recommended:" : "推薦："} ${displayStretch}</span>
           </div>
           <h3 class="text-sm font-bold text-white">${item.title}</h3>
           <p class="text-xs text-gray-300 leading-relaxed">${item.desc}</p>
-          <button type="button" data-stretch="${item.stretchTitle}" class="btn-go-pnf-item mt-1 min-h-[40px] w-full py-2 px-3 bg-gradient-to-r from-goldAccent to-amber-600 hover:from-amber-500 hover:to-amber-700 text-black text-xs font-extrabold rounded-lg transition flex items-center justify-center gap-1.5 shadow">
-            <i class="fa-solid fa-arrow-right-to-bracket"></i> <span>前往 PNF 頁面開始（${item.stretchTitle}）</span>
+          <button type="button" data-stretch="${item.stretchTitleZh}" class="btn-go-pnf-item mt-1 min-h-[40px] w-full py-2 px-3 bg-gradient-to-r from-goldAccent to-amber-600 hover:from-amber-500 hover:to-amber-700 text-black text-xs font-extrabold rounded-lg transition flex items-center justify-center gap-1.5 shadow">
+            <i class="fa-solid fa-arrow-right-to-bracket"></i> <span>${isEn ? `Go to PNF (${displayStretch})` : `前往 PNF 頁面開始（${displayStretch}）`}</span>
           </button>
         `;
 
         card.querySelector(".btn-go-pnf-item").addEventListener("click", () => {
-          localStorage.setItem("preferred_pnf_stretch", item.stretchTitle);
+          localStorage.setItem("preferred_pnf_stretch", item.stretchTitleZh);
           window.location.href = "/";
         });
 
@@ -551,6 +726,7 @@
     function renderLoop() {
       if (!webcamStream) return;
       const drawingUtils = new DrawingUtils(ctx);
+      const isEn = isLabEn();
 
       if (lastVideoTime !== video.currentTime) {
         lastVideoTime = video.currentTime;
@@ -573,12 +749,17 @@
               scanStartTime = null;
               samples = { neck: [], pelvic: [], knee: [], shoulderDiff: [], hipDiff: [], forwardHeadOffset: [], lowConfidenceCount: 0, totalCount: 0 };
               progressContainer.classList.add("hidden");
-              angleReadout.innerText = "頭肩: --° | 骨盆: --° | 膝角: --°";
+              angleReadout.innerText = formatAngleReadout(null, null, null);
               guideText.innerText = framing.msg;
             }
           } else if (metrics.coreVisible) {
-            const relTag = metrics.neckReliable ? "" : " (手臂偏移·可信度中)";
-            angleReadout.innerText = `頭肩: ${metrics.neckAngle}°${relTag} | 骨盆: ${metrics.pelvicAngle}° | 膝角: ${metrics.kneeAngle ?? "--"}°`;
+            angleReadout.innerText = formatAngleReadout(
+              metrics.neckAngle,
+              metrics.pelvicAngle,
+              metrics.kneeAngle,
+              metrics.neckReliable ? "" : " (手臂偏移·可信度中)",
+              metrics.neckReliable ? "" : " (Arm offset·Med conf)"
+            );
 
             if (currentMode === "ASSESSMENT") {
               handlePreSessionAssessment(metrics);
@@ -587,20 +768,25 @@
             scanStartTime = null;
             samples = { neck: [], pelvic: [], knee: [], shoulderDiff: [], hipDiff: [], forwardHeadOffset: [], lowConfidenceCount: 0, totalCount: 0 };
             progressContainer.classList.add("hidden");
-            guideText.innerText = "⚠️ 請站立於鏡頭前，確保頭、肩、髖、膝完整入鏡";
+            guideText.innerText = isEn
+              ? "⚠️ Stand before camera with head, shoulders, hips, and knees in frame."
+              : "⚠️ 請站立於鏡頭前，確保頭、肩、髖、膝完整入鏡";
           }
         } else if (currentMode === "ASSESSMENT") {
           scanStartTime = null;
           samples = { neck: [], pelvic: [], knee: [], shoulderDiff: [], hipDiff: [], forwardHeadOffset: [], lowConfidenceCount: 0, totalCount: 0 };
           progressContainer.classList.add("hidden");
-          angleReadout.innerText = "頭肩: --° | 骨盆: --° | 膝角: --°";
-          guideText.innerText = "❌ 未偵測到全身：請站入鏡頭畫面內，並保持適當距離與光線";
+          angleReadout.innerText = formatAngleReadout(null, null, null);
+          guideText.innerText = isEn
+            ? "❌ No body detected: step into camera view with good lighting and distance."
+            : "❌ 未偵測到全身：請站入鏡頭畫面內，並保持適當距離與光線";
         }
       }
       animationFrameId = requestAnimationFrame(renderLoop);
     }
 
     function handlePreSessionAssessment(metrics) {
+      const isEn = isLabEn();
       progressContainer.classList.remove("hidden");
       if (!scanStartTime) scanStartTime = performance.now();
 
@@ -608,8 +794,13 @@
       const pct = Math.min(100, (elapsed / SCAN_DURATION_MS) * 100);
       scanProgress.style.width = `${pct}%`;
 
-      const armHint = metrics.neckReliable ? "" : " · 偵測到手臂彎曲/叉腰，建議雙手自然下垂";
-      guideText.innerText = `正在進行全身多維度體態採樣... (${Math.ceil((SCAN_DURATION_MS - elapsed) / 1000)}s)${armHint}`;
+      const armHint = metrics.neckReliable
+        ? ""
+        : (isEn ? " · Bent/akimbo arms detected; keep arms relaxed." : " · 偵測到手臂彎曲/叉腰，建議雙手自然下垂");
+      const secLeft = Math.ceil((SCAN_DURATION_MS - elapsed) / 1000);
+      guideText.innerText = isEn
+        ? `Scanning full-body posture... (${secLeft}s)${armHint}`
+        : `正在進行全身多維度體態採樣... (${secLeft}s)${armHint}`;
 
       if (metrics.neckAngle !== null) samples.neck.push(metrics.neckAngle);
       if (metrics.pelvicAngle !== null) samples.pelvic.push(metrics.pelvicAngle);
@@ -623,7 +814,9 @@
       if (elapsed >= SCAN_DURATION_MS) {
         currentMode = "COMPLETED";
         progressContainer.classList.add("hidden");
-        guideText.innerText = "✅ 全身問題識別完成！請選擇右側處方前往 PNF 頁面";
+        guideText.innerText = isEn
+          ? "✅ Posture scan complete! Choose a prescription on the right to start PNF."
+          : "✅ 全身問題識別完成！請選擇右側處方前往 PNF 頁面";
 
         const lowRel = samples.totalCount > 0 && (samples.lowConfidenceCount / samples.totalCount) >= 0.35;
 
@@ -635,7 +828,8 @@
           hipDiff: avg(samples.hipDiff),
           forwardHeadOffset: avg(samples.forwardHeadOffset),
           neckLowReliability: lowRel,
-          neckWarning: lowRel ? "採樣期間偵測到手臂彎曲/叉腰或肩肘關鍵點偏移，頭肩角可能偏低，建議雙手自然下垂重測。" : ""
+          neckWarningZh: lowRel ? "採樣期間偵測到手臂彎曲/叉腰或肩肘關鍵點偏移，頭肩角可能偏低，建議雙手自然下垂重測。" : "",
+          neckWarningEn: lowRel ? "Bent/akimbo arms or shoulder landmark shift detected during scan; neck-shoulder angle may be lower. Retest with arms relaxed." : ""
         });
       }
     }
@@ -643,6 +837,7 @@
     photoInput.addEventListener("change", async (event) => {
       const file = event.target.files[0];
       if (!file) return;
+      const isEn = isLabEn();
 
       window.stopAiCamera();
       video.classList.add("hidden");
@@ -657,7 +852,7 @@
       uploadedPhoto.src = imageUrl;
 
       uploadedPhoto.onload = async () => {
-        guideText.innerText = "正在使用 AI 分析照片全身體態...";
+        guideText.innerText = isLabEn() ? "Analyzing full-body posture in photo..." : "正在使用 AI 分析照片全身體態...";
         if (!poseLandmarker) await initPoseLandmarker();
 
         if (currentRunningMode !== "IMAGE") {
@@ -675,11 +870,16 @@
           const metrics = extractPostureMetrics(lm);
 
           if (metrics.coreVisible) {
-            const relTag = metrics.neckReliable ? "" : " (手臂偏移·可信度中)";
-            angleReadout.innerText = `頭肩: ${metrics.neckAngle}°${relTag} | 骨盆: ${metrics.pelvicAngle}° | 膝角: ${metrics.kneeAngle ?? "--"}°`;
+            angleReadout.innerText = formatAngleReadout(
+              metrics.neckAngle,
+              metrics.pelvicAngle,
+              metrics.kneeAngle,
+              metrics.neckReliable ? "" : " (手臂偏移·可信度中)",
+              metrics.neckReliable ? "" : " (Arm offset·Med conf)"
+            );
             guideText.innerText = metrics.neckReliable
-              ? "✅ 照片全身問題識別完成！請查看右側處方清單"
-              : "⚠️ 照片辨識完成（偵測到手臂彎曲/叉腰，頭肩角可信度為中，建議參考右側說明）";
+              ? (isLabEn() ? "✅ Photo posture scan complete! Check prescriptions on the right." : "✅ 照片全身問題識別完成！請查看右側處方清單")
+              : (isLabEn() ? "⚠️ Photo analyzed (bent/akimbo arms detected; medium neck-shoulder confidence)." : "⚠️ 照片辨識完成（偵測到手臂彎曲/叉腰，頭肩角可信度為中，建議參考右側說明）");
             renderAllIssuesAndRecommendations({
               neck: metrics.neckAngle,
               pelvic: metrics.pelvicAngle,
@@ -688,15 +888,20 @@
               hipDiff: metrics.hipDiff,
               forwardHeadOffset: metrics.forwardHeadOffset,
               neckLowReliability: !metrics.neckReliable,
-              neckWarning: metrics.neckWarning
+              neckWarningZh: metrics.neckWarningZh,
+              neckWarningEn: metrics.neckWarningEn
             });
           } else {
-            guideText.innerText = "⚠️ 無法完整辨識主要關節，請上傳包含頭、肩、髖、膝的清晰全身照";
+            guideText.innerText = isEn
+              ? "⚠️ Unable to detect key joints clearly. Upload a full-body photo showing head, shoulders, hips, and knees."
+              : "⚠️ 無法完整辨識主要關節，請上傳包含頭、肩、髖、膝的清晰全身照";
           }
         } else {
           lastPhotoLandmarks = null;
           ctx.clearRect(0, 0, canvas.width, canvas.height);
-          guideText.innerText = "❌ 照片中未偵測到人體骨架，請更換光線充足的全身照重試";
+          guideText.innerText = isEn
+            ? "❌ No human pose detected in photo. Try a well-lit full-body photo."
+            : "❌ 照片中未偵測到人體骨架，請更換光線充足的全身照重試";
         }
 
         URL.revokeObjectURL(imageUrl);
@@ -706,6 +911,7 @@
 
     async function switchToCameraMode() {
       lastPhotoLandmarks = null;
+      lastSummaryForRender = null;
       uploadedPhoto.classList.add("hidden");
       video.classList.remove("hidden");
       canvas.classList.add("-scale-x-100");
@@ -715,10 +921,11 @@
       currentMode = "ASSESSMENT";
       scanStartTime = null;
       samples = { neck: [], pelvic: [], knee: [], shoulderDiff: [], hipDiff: [], forwardHeadOffset: [], lowConfidenceCount: 0, totalCount: 0 };
-      document.getElementById("mode-badge").innerText = "全身快篩";
+      document.getElementById("mode-badge").innerText = LAB_I18N[isLabEn() ? "en" : "zh"]["lab.mode_badge"];
       document.getElementById("scanning-placeholder").classList.remove("hidden");
       document.getElementById("assessment-result").classList.add("hidden");
       reliabilityBanner.classList.add("hidden");
+      angleReadout.innerText = formatAngleReadout(null, null, null);
 
       await window.startAiCamera();
     }
@@ -726,6 +933,7 @@
     btnSourceCam.addEventListener("click", switchToCameraMode);
     document.getElementById("btn-reset").addEventListener("click", switchToCameraMode);
 
+    applyLabLang();
     window.startAiCamera();
   </script>
 </body>

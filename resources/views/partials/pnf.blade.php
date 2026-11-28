@@ -32,13 +32,14 @@
       <div class="min-w-0">
         <h2 class="text-base sm:text-lg font-bold text-white flex flex-wrap items-center gap-2">
           <span class="flex items-center gap-2">
-            <i class="fa-solid fa-heart-pulse text-goldAccent"></i> PNF Stretching Protocol Assistant
+            <i class="fa-solid fa-heart-pulse text-goldAccent"></i>
+            <span data-i18n="pnf.title">PNF Stretching Protocol Assistant</span>
           </span>
-          <span class="px-2 py-0.5 text-[10px] font-bold rounded-md bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 uppercase tracking-wide">
+          <span data-i18n="pnf.ai_badge" class="px-2 py-0.5 text-[10px] font-bold rounded-md bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 uppercase tracking-wide">
             AI POSE HOLD ACTIVE
           </span>
         </h2>
-        <p class="text-[11px] sm:text-xs text-gray-400 mt-1 leading-relaxed">
+        <p data-i18n="pnf.subtitle" class="text-[11px] sm:text-xs text-gray-400 mt-1 leading-relaxed">
           Proprioceptive Neuromuscular Facilitation (Hold-Relax Method): AI tracks your joint angles in real-time and counts down only while proper stretch posture is held.
         </p>
       </div>
@@ -53,17 +54,18 @@
               <button type="button"
                 data-stretch-id="{{ $stretch->id }}"
                 data-title="{{ $stretch->title_zh }}"
+                data-title-en="{{ $stretch->title_en ?? $stretch->title_zh }}"
                 data-steps='{{ json_encode($stretch->pnfSteps) }}'
                 data-ai-rules='@json($stretch->ai_rules)'
                 onclick="handlePnfPresetClick(this)"
                 class="pnf-preset-btn shrink-0 min-h-[36px] whitespace-nowrap {{ ($dIndex === 0 && $sIndex === 0) ? 'active-preset bg-goldAccent/20 text-goldAccent border-goldAccent/50' : 'bg-[#171923] text-gray-300 border-gray-700/80' }} px-3 py-1.5 rounded-lg text-xs font-semibold hover:bg-goldAccent hover:text-black transition border inline-flex items-center gap-1.5">
                 <i class="fa-solid fa-heart-pulse text-[11px]"></i>
-                <span>{{ $stretch->title_zh }}</span>
+                <span class="pnf-preset-label">{{ $stretch->title_zh }}</span>
               </button>
             @endforeach
           @endforeach
         @else
-          <span class="text-xs text-gray-500">尚無預設動作</span>
+          <span data-i18n="pnf.no_presets" class="text-xs text-gray-500">尚無預設動作</span>
         @endif
       </div>
     </div>
@@ -74,7 +76,7 @@
 
     <!-- Left: AI Pose Detection & Smart Hold Timer Display (8 cols on lg+) -->
     <div class="lg:col-span-8 glass-card rounded-2xl p-3.5 sm:p-6 border border-gray-800/90 flex flex-col items-center justify-between relative overflow-hidden min-w-0">
-      
+
       <!-- Background Ambient Glow -->
       <div id="pnf-glow-bg" class="absolute inset-0 bg-goldAccent/5 blur-3xl pointer-events-none transition-colors duration-500"></div>
 
@@ -84,18 +86,17 @@
           <span id="pnf-target-label" class="text-[11px] sm:text-xs uppercase tracking-wider font-bold px-3 py-1 rounded-full bg-amber-500/15 text-goldAccent border border-goldAccent/40 truncate max-w-[210px] sm:max-w-none">
             TARGET: 胸大肌門框 PNF 拉伸
           </span>
-          <!-- 來源切換：即時攝影機 / 上傳照片驗證 -->
           <button type="button" id="ai-btn-cam" onclick="switchPnfAiSource('cam')" class="min-h-[32px] px-2.5 py-1 rounded-lg text-[11px] font-bold bg-indigo-600 hover:bg-indigo-500 text-white transition inline-flex items-center gap-1">
-            <i class="fa-solid fa-video"></i> Live Cam
+            <i class="fa-solid fa-video"></i> <span data-i18n="pnf.live_cam">Live Cam</span>
           </button>
           <label for="ai-photo-input" id="ai-btn-photo" class="min-h-[32px] cursor-pointer px-2.5 py-1 rounded-lg text-[11px] font-bold bg-[#1b1e2b] hover:bg-gray-700 text-gray-200 border border-gray-700 transition inline-flex items-center gap-1">
-            <i class="fa-solid fa-image"></i> Photo Test
+            <i class="fa-solid fa-image"></i> <span data-i18n="pnf.photo_test">Photo Test</span>
           </label>
           <input type="file" id="ai-photo-input" accept="image/*" class="hidden">
         </div>
 
         <span class="text-xs text-gray-400 font-semibold shrink-0">
-          Cycle <span id="pnf-cycle-count" class="text-white font-bold">1</span> of 3
+          <span data-i18n="pnf.cycle">Cycle</span> <span id="pnf-cycle-count" class="text-white font-bold">1</span> <span data-i18n="pnf.of_3">of 3</span>
         </span>
       </div>
 
@@ -109,7 +110,7 @@
         <div class="absolute top-2.5 left-2.5 sm:top-3.5 sm:left-3.5 flex flex-col gap-1.5 text-left max-w-[60%]">
           <div id="ai-hold-badge" class="px-2.5 py-1 rounded-full text-[10px] sm:text-xs font-bold bg-black/85 text-gray-200 border border-gray-700/90 backdrop-blur-md flex items-center gap-1.5 truncate">
             <span id="ai-hold-dot" class="w-2 h-2 rounded-full bg-gray-400 shrink-0"></span>
-            <span id="ai-hold-status-text" class="truncate">AI Standby (Click Start)</span>
+            <span id="ai-hold-status-text" data-i18n="pnf.ai_standby" class="truncate">AI Standby (Click Start)</span>
           </div>
           <span id="ai-joint-readout" class="px-2.5 py-1 rounded-lg text-[10px] sm:text-[11px] font-mono bg-black/80 text-goldAccent border border-gray-800 backdrop-blur-sm truncate">
             Angle: --° | Target: &gt;=75°
@@ -120,10 +121,10 @@
         <div class="absolute top-2.5 right-2.5 sm:top-3.5 sm:right-3.5 w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 rounded-2xl bg-[#0e1017]/85 backdrop-blur-md border border-gray-700/80 p-2 flex items-center justify-center shadow-lg">
           <svg class="w-full h-full -rotate-90" viewBox="0 0 120 120">
             <circle class="text-gray-800" stroke-width="7" stroke="currentColor" fill="transparent" r="52" cx="60" cy="60" />
-            <circle id="pnf-progress-circle" class="progress-ring__circle text-goldAccent transition-all duration-300" stroke-width="7" stroke-dasharray="326.72" stroke-dashoffset="0" stroke-linecap="round" stroke="currentColor" fill="transparent" r="52" cx="60" cy="60" />
+            <circle id="pnf-progress-circle" class="progress-ring__circle text-goldAccent transition-all duration-300" stroke-width="7" stroke-dasharray="326.72" stroke-dashoffset="0" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" fill="transparent" r="52" cx="60" cy="60" />
           </svg>
           <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-1">
-            <span id="pnf-phase-badge" class="text-[7px] sm:text-[8px] font-extrabold tracking-wider px-1.5 py-0.5 rounded bg-goldAccent/20 text-goldAccent border border-goldAccent/40 truncate max-w-[74px] sm:max-w-[96px]">
+            <span id="pnf-phase-badge" class="text-[7px] sm:text-[8px] font-extrabold tracking-tight px-1.5 py-0.5 rounded bg-goldAccent/20 text-goldAccent border border-goldAccent/40 truncate max-w-[68px] sm:max-w-[88px]">
               STEP 1: 初始預備
             </span>
             <span id="pnf-timer-digits" class="text-xl sm:text-2xl md:text-3xl font-extrabold text-white font-mono leading-tight mt-0.5">
@@ -142,30 +143,28 @@
               已切換動作規則：抬起手臂扶住門框（大臂外展 ≥ 75°）並挺胸前跨
             </p>
           </div>
-          <button type="button" id="ai-btn-simulate" onclick="toggleSimulatePoseHold()" class="hidden shrink-0 px-2.5 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-[11px] font-bold text-white transition">
+          <button type="button" id="ai-btn-simulate" onclick="toggleSimulatePoseHold()" data-i18n="pnf.sim_btn" class="hidden shrink-0 px-2.5 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-[11px] font-bold text-white transition">
             模擬動作達標
           </button>
         </div>
       </div>
 
       <!-- Phase Progress Flow Bar (6 Steps) -->
-      <div id="pnf-stepper-container" class="z-10 w-full max-w-2xl my-3.5 sm:my-4 grid grid-cols-3 sm:grid-cols-6 gap-2 text-center">
-        <!-- Dynamically Rendered by JS -->
-      </div>
+      <div id="pnf-stepper-container" class="z-10 w-full max-w-2xl my-3.5 sm:my-4 grid grid-cols-3 sm:grid-cols-6 gap-2 text-center"></div>
 
       <!-- Interactive Controls Row -->
       <div class="z-10 grid grid-cols-2 sm:flex sm:items-center sm:justify-center gap-2.5 sm:gap-3 w-full max-w-xl">
-        <button id="pnf-btn-start" onclick="startPnfTimer()" class="col-span-2 sm:flex-1 min-h-[46px] py-2.5 px-5 rounded-xl font-extrabold text-xs sm:text-sm bg-gradient-to-r from-amber-400 to-goldAccent text-black shadow-lg shadow-goldAccent/20 hover:brightness-105 active:scale-95 transition">
-          <i class="fa-solid fa-play mr-1.5"></i> Start Session
+        <button id="pnf-btn-start" type="button" onclick="startPnfTimer()" class="col-span-2 sm:flex-1 min-h-[46px] py-2.5 px-5 rounded-xl font-extrabold text-xs sm:text-sm bg-gradient-to-r from-amber-400 to-goldAccent text-black shadow-lg shadow-goldAccent/20 hover:brightness-105 active:scale-95 transition">
+          <i class="fa-solid fa-play mr-1.5"></i> <span data-i18n="pnf.start">Start Session</span>
         </button>
-        <button id="pnf-btn-pause" onclick="pausePnfTimer()" disabled class="min-h-[42px] py-2.5 px-4 rounded-xl font-bold text-xs sm:text-sm bg-[#171923] text-gray-400 border border-gray-800 hover:bg-gray-800 disabled:opacity-45 disabled:pointer-events-none transition">
-          <i class="fa-solid fa-pause mr-1"></i> Pause
+        <button id="pnf-btn-pause" type="button" onclick="pausePnfTimer()" disabled class="min-h-[42px] py-2.5 px-4 rounded-xl font-bold text-xs sm:text-sm bg-[#171923] text-gray-400 border border-gray-800 hover:bg-gray-800 disabled:opacity-45 disabled:pointer-events-none transition">
+          <i class="fa-solid fa-pause mr-1"></i> <span data-i18n="pnf.pause">Pause</span>
         </button>
-        <button id="pnf-btn-reset" onclick="resetPnfTimer()" class="min-h-[42px] py-2.5 px-4 rounded-xl font-bold text-xs sm:text-sm bg-[#171923] text-gray-200 border border-gray-800 hover:bg-gray-800 transition">
-          <i class="fa-solid fa-rotate-left mr-1"></i> Reset
+        <button id="pnf-btn-reset" type="button" onclick="resetPnfTimer()" class="min-h-[42px] py-2.5 px-4 rounded-xl font-bold text-xs sm:text-sm bg-[#171923] text-gray-200 border border-gray-800 hover:bg-gray-800 transition">
+          <i class="fa-solid fa-rotate-left mr-1"></i> <span data-i18n="pnf.reset">Reset</span>
         </button>
-        <button onclick="skipPnfPhase()" class="col-span-2 sm:col-span-1 min-h-[42px] py-2.5 px-4 rounded-xl font-bold text-xs sm:text-sm bg-[#171923] text-goldAccent border border-goldAccent/40 hover:bg-goldAccent/10 transition">
-          <i class="fa-solid fa-forward-step mr-1"></i> Skip Step
+        <button type="button" onclick="skipPnfPhase()" class="col-span-2 sm:col-span-1 min-h-[42px] py-2.5 px-4 rounded-xl font-bold text-xs sm:text-sm bg-[#171923] text-goldAccent border border-goldAccent/40 hover:bg-goldAccent/10 transition">
+          <i class="fa-solid fa-forward-step mr-1"></i> <span data-i18n="pnf.skip">Skip Step</span>
         </button>
       </div>
 
@@ -175,18 +174,17 @@
     <div class="lg:col-span-4 glass-card rounded-2xl p-4 sm:p-6 border border-gray-800/90 flex flex-col justify-between space-y-4 min-w-0">
       <div class="min-w-0">
         <div class="flex items-center gap-2 text-goldAccent font-bold text-sm mb-3.5">
-          <i class="fa-solid fa-book-open"></i> PNF Protocol Execution Guide
+          <i class="fa-solid fa-book-open"></i> <span data-i18n="pnf.guide_title">PNF Protocol Execution Guide</span>
         </div>
-        
-        <div id="pnf-guide-steps-list" class="space-y-2.5 text-xs text-gray-300 max-h-[300px] md:max-h-[380px] lg:max-h-[440px] overflow-y-auto pr-1">
-          <!-- Rendered via JS -->
-        </div>
+
+        <div id="pnf-guide-steps-list" class="space-y-2.5 text-xs text-gray-300 max-h-[300px] md:max-h-[380px] lg:max-h-[440px] overflow-y-auto pr-1"></div>
       </div>
 
       <!-- Scientific Note Footer -->
       <div class="p-3.5 rounded-xl bg-amber-500/10 border border-goldAccent/30 text-[11px] text-gray-300 leading-relaxed">
         <i class="fa-solid fa-lightbulb text-goldAccent mr-1"></i>
-        <strong>Neuro-Physiology Note:</strong> PNF utilizes Golgi Tendon Organ (GTO) autogenic inhibition to override stretch reflex resistance.
+        <strong data-i18n="pnf.note_label">Neuro-Physiology Note:</strong>
+        <span data-i18n="pnf.note_body">PNF utilizes Golgi Tendon Organ (GTO) autogenic inhibition to override stretch reflex resistance.</span>
       </div>
     </div>
 
@@ -196,104 +194,205 @@
 <script type="module">
   import { PoseLandmarker, FilesetResolver, DrawingUtils } from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14";
 
-  // 1. 前端備援規則庫（當資料庫 ai_rules 尚未讀取時的預設防護）
-  const PNF_RULES_BY_KEYWORD = [
-    {
-      keywords: ["前臂", "手腕", "屈肌", "伸肌"],
-      left: [11, 13, 15], right: [12, 14, 16],
-      target: 158, comparator: ">=",
-      requireArmStraight: true,
-      tip: "手臂完全伸直貼牆（手肘角度 ≥ 158°），不可彎曲手肘"
+  const PNF_I18N = {
+    zh: {
+      "pnf.title": "PNF 伸展協定助手",
+      "pnf.ai_badge": "AI 姿勢保持偵測中",
+      "pnf.subtitle": "本體感覺神經肌肉促進法（Hold-Relax）：AI 即時追蹤關節角度，僅在維持正確伸展姿勢時倒數計時。",
+      "pnf.no_presets": "尚無預設動作",
+      "pnf.live_cam": "即時鏡頭",
+      "pnf.photo_test": "照片測試",
+      "pnf.cycle": "第",
+      "pnf.of_3": "組 / 共 3 組",
+      "pnf.ai_standby": "AI 待命（點擊開始）",
+      "pnf.sim_btn": "模擬動作達標",
+      "pnf.start": "開始訓練",
+      "pnf.pause": "暫停",
+      "pnf.reset": "重設",
+      "pnf.skip": "跳過步驟",
+      "pnf.guide_title": "PNF 動作執行指南",
+      "pnf.note_label": "神經生理學提示：",
+      "pnf.note_body": "PNF 利用高爾肌腱器（GTO）自發性抑制機制，降低伸展反射阻力以提升關節活動度。"
     },
-    {
-      keywords: ["抓腳", "股四頭", "股直肌", "大腿前"],
-      left: [23, 25, 27], right: [24, 26, 28],
-      target: 75, comparator: "<=",
-      requireLowerBody: true,
-      tip: "單手抓腳踝將腳跟拉向臀部，保持屈膝角度 ≤ 75°"
-    },
-    {
-      keywords: ["胸大肌", "胸小肌", "門框", "擴胸", "圓肩"],
-      left: [13, 11, 23], right: [14, 12, 24],
-      target: 75, comparator: ">=",
-      tip: "抬起手臂扶住門框（大臂外展 ≥ 75°）並挺胸前跨"
-    },
-    {
-      keywords: ["闊背", "背闊", "三頭", "過頭", "菱形"],
-      left: [13, 11, 23], right: [14, 12, 24],
-      target: 145, comparator: ">=",
-      requireOverhead: true,
-      tip: "單手高舉過頭（手臂貼近耳朵 ≥ 145°）並向對側側屈"
-    },
-    {
-      keywords: ["腹外斜", "腹內斜", "腰方肌", "側彎", "側屈", "軀幹"],
-      left: [11, 23, 25], right: [12, 24, 26],
-      target: 155, comparator: "<=",
-      tip: "軀幹明顯向對側側彎（軀幹側屈角 ≤ 155°），不可直立站著"
-    },
-    {
-      keywords: ["斜方肌", "提肩胛", "胸鎖乳突", "頸", "頭"],
-      left: [7, 11, 12], right: [8, 12, 11],
-      target: 112, comparator: ">=",
-      tip: "保持雙肩下沉，頭部向對側緩慢側傾 ≥ 112°"
-    },
-    {
-      keywords: ["大腿後肌", "膕繩", "腿後", "直腿"],
-      left: [23, 25, 27], right: [24, 26, 28],
-      target: 162, comparator: ">=",
-      requireLowerBody: true,
-      tip: "抬起單腿並保持膝蓋伸直（膝角 ≥ 162°）"
-    },
-    {
-      keywords: ["髂腰肌", "髖屈", "高跪", "弓箭步"],
-      left: [11, 23, 25], right: [12, 24, 26],
-      target: 165, comparator: ">=",
-      requireLowerBody: true,
-      requireKneeling: true,
-      tip: "採單膝跪地高跪姿，重心微前移展開後側髖部 ≥ 165°"
-    },
-    {
-      keywords: ["臀大肌", "梨狀肌", "抱膝", "臀"],
-      left: [11, 23, 25], right: [12, 24, 26],
-      target: 65, comparator: "<=",
-      requireLowerBody: true,
-      tip: "雙手抱膝拉向胸口，保持屈髖角度 ≤ 65°"
-    },
-    {
-      keywords: ["內收", "蝴蝶", "胯"],
-      left: [23, 25, 27], right: [24, 26, 28],
-      target: 95, comparator: "<=",
-      requireLowerBody: true,
-      tip: "屈膝外展拉伸大腿內側，保持姿勢穩定"
-    },
-    {
-      keywords: ["腓腸肌", "比目魚", "小腿", "跟腱", "推牆", "壁面"],
-      left: [25, 27, 31], right: [26, 28, 32],
-      target: 85, comparator: "<=",
-      requireLowerBody: true,
-      tip: "後腳跟踩實地面身體前傾，保持小腿拉伸角度"
+    en: {
+      "pnf.title": "PNF Stretching Protocol Assistant",
+      "pnf.ai_badge": "AI POSE HOLD ACTIVE",
+      "pnf.subtitle": "Proprioceptive Neuromuscular Facilitation (Hold-Relax Method): AI tracks your joint angles in real-time and counts down only while proper stretch posture is held.",
+      "pnf.no_presets": "No preset routines available",
+      "pnf.live_cam": "Live Cam",
+      "pnf.photo_test": "Photo Test",
+      "pnf.cycle": "Cycle",
+      "pnf.of_3": "of 3",
+      "pnf.ai_standby": "AI Standby (Click Start)",
+      "pnf.sim_btn": "Simulate Hold",
+      "pnf.start": "Start Session",
+      "pnf.pause": "Pause",
+      "pnf.reset": "Reset",
+      "pnf.skip": "Skip Step",
+      "pnf.guide_title": "PNF Protocol Execution Guide",
+      "pnf.note_label": "Neuro-Physiology Note:",
+      "pnf.note_body": "PNF utilizes Golgi Tendon Organ (GTO) autogenic inhibition to override stretch reflex resistance."
     }
-  ];
-
-  const DEFAULT_RULE = {
-    left: [11, 23, 25], right: [12, 24, 26],
-    target: 150, comparator: ">=",
-    requireLowerBody: false,
-    tip: "請將全身側面置於鏡頭內並保持目標拉伸姿勢"
   };
 
-  // 滑鼠滾輪在 Presets (22) 橫向列上自然左右滾動
-  const presetsScrollEl = document.getElementById("pnf-presets-scroll");
-  if (presetsScrollEl) {
-    presetsScrollEl.addEventListener("wheel", (e) => {
-      if (Math.abs(e.deltaY) > Math.abs(e.deltaX) && presetsScrollEl.scrollWidth > presetsScrollEl.clientWidth) {
-        presetsScrollEl.scrollLeft += e.deltaY;
-        e.preventDefault();
-      }
-    }, { passive: false });
+  const PNF_TIP_EN_BY_STRETCH_ID = {
+    1: "Raise your arm against the doorway (shoulder abduction ≥ 75°) and step forward with chest up.",
+    2: "Lie supine, lift one leg, and keep the knee extended (knee angle ≥ 162°).",
+    3: "Sit upright, stabilize your shoulder, and gently tilt your head toward the opposite side.",
+    4: "Lie on your side and draw your heel toward your glutes while keeping posture steady.",
+    5: "Keep a half-kneeling lunge with neutral pelvis and shift weight gently forward.",
+    6: "Lie supine and hug one knee toward your chest without lifting lower back excessively.",
+    7: "Sit upright, raise one arm overhead, and side-bend smoothly without twisting.",
+    8: "Keep back leg straight with heel planted while leaning gently forward.",
+    9: "Lie supine in a figure-4 position and draw the bottom thigh toward your chest.",
+    10: "Keep arm straight with palm reversed against the wall and apply gentle pressure.",
+    11: "Raise arm to ~120° on the doorway and press chest gently forward.",
+    12: "Lie prone and press upper body up comfortably within a pain-free range.",
+    13: "Sit upright and perform a controlled side-bend and gentle rotation.",
+    14: "In half-kneeling, keep torso upright and glutes engaged during rear-leg stretch.",
+    15: "Lie supine with one leg externally rotated and let knee settle gently.",
+    16: "Sit in butterfly pose with soles together and hinge torso slightly forward.",
+    17: "In a short wall lunge, keep back knee slightly bent with heel planted.",
+    18: "In kneeling stance with insteps down, sit hips back smoothly.",
+    19: "Stand with back to wall, arm straight behind, and turn body gently forward.",
+    20: "Raise elbow overhead and support it while keeping neck relaxed.",
+    21: "Turn head ~45° and look slightly down toward armpit with gentle guidance.",
+    22: "Slightly side-bend/turn toward the same side, then guide gently to opposite side."
+  };
+
+  let currentRoutineSteps = [];
+  let currentStepIdx = 0;
+  let activePresetBtn = document.querySelector("#module-pnf .pnf-preset-btn.active-preset") || document.querySelector("#module-pnf .pnf-preset-btn");
+  let activeStretchTitle = activePresetBtn?.dataset.title || "";
+  let activeDbRule = null;
+
+  function detectLang() {
+    const raw = window.currentLang || document.documentElement.lang || localStorage.getItem("lang") || localStorage.getItem("locale") || "zh";
+    return String(raw).toLowerCase().startsWith("en") ? "en" : "zh";
   }
 
-  // DOM 元素
+  function isEnglishMode() {
+    return detectLang() === "en";
+  }
+
+  function getStepTitle(step) {
+    if (!step) return "";
+    if (isEnglishMode()) {
+      return step.step_name_en || step.step_nameEn || step.step_name_zh || step.step_name || "";
+    }
+    return step.step_name_zh || step.step_name || step.step_name_en || "";
+  }
+
+  function getStepDesc(step) {
+    if (!step) return "";
+    if (isEnglishMode()) {
+      return step.instruction_en || step.instructionEn || step.instruction || step.instruction_zh || "";
+    }
+    return step.instruction || step.instruction_zh || step.instruction_en || "";
+  }
+
+  function getFeedbackTip() {
+    const activeBtn = document.querySelector("#module-pnf .pnf-preset-btn.active-preset") || activePresetBtn;
+    const stretchId = Number(activeBtn?.dataset?.stretchId || activeDbRule?.stretch_id || 0);
+    const zhTip = activeDbRule?.tip || "";
+
+    if (isEnglishMode()) {
+      if (activeDbRule?.tip_en) return activeDbRule.tip_en;
+      if (PNF_TIP_EN_BY_STRETCH_ID[stretchId]) return PNF_TIP_EN_BY_STRETCH_ID[stretchId];
+      const degMatch = zhTip.match(/(≥|<=|>|<)\s*\d+\s*°/);
+      return degMatch
+        ? `Hold proper stretch posture (${degMatch[0].replace(">=", "≥").replace("<=", "≤")}).`
+        : "Maintain proper PNF stretch alignment and hold steady.";
+    }
+
+    return zhTip;
+  }
+
+  function syncStepsFromButton(btn) {
+    if (!btn) return;
+    activePresetBtn = btn;
+
+    if (btn.dataset.title) {
+      activeStretchTitle = btn.dataset.title;
+    }
+
+    if (btn.dataset.aiRules && btn.dataset.aiRules !== "null") {
+      try {
+        activeDbRule = JSON.parse(btn.dataset.aiRules);
+      } catch (_) {
+        activeDbRule = null;
+      }
+    } else {
+      activeDbRule = null;
+    }
+
+    if (btn.dataset.steps) {
+      try {
+        const parsed = JSON.parse(btn.dataset.steps);
+        if (Array.isArray(parsed)) {
+          currentRoutineSteps = parsed;
+        }
+      } catch (_) {
+        currentRoutineSteps = [];
+      }
+    }
+  }
+
+  window.renderPnfGuideList = function () {
+    const guideContainer = document.getElementById("pnf-guide-steps-list");
+    if (!guideContainer) return;
+
+    const activeBtn = document.querySelector("#module-pnf .pnf-preset-btn.active-preset") || activePresetBtn;
+    if (activeBtn) {
+      syncStepsFromButton(activeBtn);
+    }
+
+    if (!currentRoutineSteps || !currentRoutineSteps.length) {
+      guideContainer.innerHTML = "";
+      return;
+    }
+
+    guideContainer.innerHTML = currentRoutineSteps.map((step) => `
+      <div class="p-3 rounded-xl bg-surfaceDark border border-gray-800/80">
+        <span class="font-bold text-goldAccent block mb-0.5">Step ${step.step_number}: ${getStepTitle(step)} (${step.duration_seconds}s)</span>
+        <span class="text-gray-300">${getStepDesc(step)}</span>
+      </div>
+    `).join("");
+  };
+
+  window.renderPnfStepper = function () {
+    const container = document.getElementById("pnf-stepper-container");
+    if (!container) return;
+    if (!currentRoutineSteps.length) {
+      container.innerHTML = "";
+      return;
+    }
+    container.innerHTML = currentRoutineSteps.map((step, idx) => `
+      <div id="pnf-step-box-${idx}" class="p-2 rounded-xl bg-cardDark border border-gray-800 text-gray-400 transition-all duration-300">
+        <p class="text-[9px] font-bold uppercase tracking-wider">Step ${step.step_number}</p>
+        <p class="text-[11px] font-semibold font-mono truncate">${getStepTitle(step)}</p>
+      </div>
+    `).join("");
+  };
+
+  const baseUpdatePnfUI = window.updatePnfUI;
+  window.updatePnfUI = function () {
+    if (typeof baseUpdatePnfUI === "function") baseUpdatePnfUI();
+
+    const badgeEl = document.getElementById("pnf-phase-badge");
+    const instEl = document.getElementById("pnf-instruction-text");
+    if (badgeEl) {
+      const m = badgeEl.textContent.match(/STEP\s*(\d+)/i);
+      if (m) currentStepIdx = Math.max(0, parseInt(m[1], 10) - 1);
+    }
+
+    const step = currentRoutineSteps[currentStepIdx];
+    if (step) {
+      if (badgeEl) badgeEl.textContent = `STEP ${step.step_number}: ${getStepTitle(step)}`;
+      if (instEl) instEl.textContent = getStepDesc(step);
+    }
+  };
+
   const video = document.getElementById("pnf-ai-webcam");
   const photoImg = document.getElementById("pnf-ai-photo");
   const photoInput = document.getElementById("ai-photo-input");
@@ -316,84 +415,155 @@
   let isPoseHeldValid = false;
   let isSimulatedHold = false;
   let lastDetectedLandmarks = null;
-  let lastPhotoValid = false;
-
-  let activePresetBtn = document.querySelector(".pnf-preset-btn.active-preset");
-  let activeStretchTitle = activePresetBtn?.dataset.title || "胸大肌門框 PNF 拉伸";
-  let activeDbRule = activePresetBtn?.dataset.aiRules ? JSON.parse(activePresetBtn.dataset.aiRules) : null;
-
-  function normalizeStretchTitle(str = "") {
-    return str
-      .replace(/\s+/g, "")
-      .replace(/PNF/gi, "")
-      .replace(/推牆/g, "壁面")
-      .replace(/伸展/g, "拉伸")
-      .trim()
-      .toLowerCase();
-  }
-
-  function findPresetButtonByTitle(preferredTitle) {
-    const buttons = Array.from(document.querySelectorAll(".pnf-preset-btn"));
-    if (!buttons.length || !preferredTitle) return null;
-
-    const targetNorm = normalizeStretchTitle(preferredTitle);
-    let found = buttons.find(b => normalizeStretchTitle(b.dataset.title || "") === targetNorm);
-    if (found) return found;
-
-    found = buttons.find(b => {
-      const bNorm = normalizeStretchTitle(b.dataset.title || "");
-      return bNorm.includes(targetNorm) || targetNorm.includes(bNorm);
-    });
-    if (found) return found;
-
-    const muscleMatch = preferredTitle.match(/[\u4e00-\u9fa5]{2,4}(?=推牆|壁面|跪姿|仰臥|側彎|側屈|抱膝|直膝|屈膝|PNF|\s|$)/);
-    if (muscleMatch) {
-      const key = normalizeStretchTitle(muscleMatch[0]);
-      found = buttons.find(b => normalizeStretchTitle(b.dataset.title || "").includes(key));
-    }
-    return found || null;
-  }
 
   function getCurrentRule() {
-    if (activeDbRule && activeDbRule.left && activeDbRule.right) {
-      return activeDbRule;
-    }
-    return PNF_RULES_BY_KEYWORD.find(r => r.keywords.some(k => activeStretchTitle.includes(k))) || DEFAULT_RULE;
+    if (activeDbRule && activeDbRule.left && activeDbRule.right) return activeDbRule;
+    return {
+      left: [11, 23, 25],
+      right: [12, 24, 26],
+      target: 150,
+      comparator: ">=",
+      requireLowerBody: false,
+      tip: ""
+    };
   }
 
-  function getActiveGuideText() {
-    return document.getElementById("pnf-guide-steps-list")?.innerText || "";
+  function resetHoldHudToStandby() {
+    const isEn = isEnglishMode();
+    const rule = getCurrentRule();
+    isAiSessionActive = false;
+    isPoseHeldValid = false;
+    isSimulatedHold = false;
+
+    holdDot.className = "w-2 h-2 rounded-full bg-gray-400 shrink-0";
+    holdStatusText.innerText = isEn ? "AI Standby (Click Start)" : "AI 待命（點擊開始）";
+    holdBadge.className = "px-2.5 py-1 rounded-full text-[10px] sm:text-xs font-bold bg-black/85 text-gray-200 border border-gray-700/90 backdrop-blur-md flex items-center gap-1.5 truncate";
+
+    if (rule?.target && rule?.comparator) {
+      jointReadout.innerText = `Angle: --° | Target: ${rule.comparator}${rule.target}°`;
+    } else {
+      jointReadout.innerText = "Angle: --° | Target: >=75°";
+    }
+
+    const firstStep = currentRoutineSteps[0];
+    const digitsEl = document.getElementById("pnf-timer-digits");
+    const cycleEl = document.getElementById("pnf-cycle-count");
+    const circleEl = document.getElementById("pnf-progress-circle");
+    const btnStart = document.getElementById("pnf-btn-start");
+    const btnPause = document.getElementById("pnf-btn-pause");
+
+    if (firstStep && digitsEl) {
+      digitsEl.innerText = String(firstStep.duration_seconds || 10);
+    }
+    if (cycleEl) cycleEl.innerText = "1";
+    if (circleEl) circleEl.style.strokeDashoffset = "0";
+    if (btnStart) btnStart.disabled = false;
+    if (btnPause) btnPause.disabled = true;
+
+    const tip = getFeedbackTip();
+    if (tip) feedbackSubtext.innerText = tip;
   }
 
-  // 檢查即時鏡頭是否拍到完整全身／距離是否過遠
-  function checkLiveFraming(landmarks) {
-    const visPts = landmarks.filter(pt => pt && (pt.visibility ?? 0) >= 0.5);
-    if (visPts.length < 10) {
-      return { ok: false, msg: "❌ 未偵測到完整全身：請調整鏡頭角度，讓全身完整入鏡" };
+  function applyPnfLang() {
+    const lang = detectLang();
+    const dict = PNF_I18N[lang];
+
+    document.querySelectorAll("#module-pnf [data-i18n]").forEach((el) => {
+      const key = el.getAttribute("data-i18n");
+      if (dict[key] && el.textContent !== dict[key]) el.textContent = dict[key];
+    });
+
+    document.querySelectorAll("#module-pnf .pnf-preset-btn").forEach((btn) => {
+      const labelEl = btn.querySelector(".pnf-preset-label");
+      if (labelEl) {
+        const nextText = lang === "en" ? (btn.dataset.titleEn || btn.dataset.title) : btn.dataset.title;
+        if (labelEl.textContent !== nextText) labelEl.textContent = nextText;
+      }
+    });
+
+    if (targetLabel) {
+      const curBtn = document.querySelector("#module-pnf .pnf-preset-btn.active-preset") || activePresetBtn;
+      const displayName = curBtn
+        ? (lang === "en" ? (curBtn.dataset.titleEn || curBtn.dataset.title) : curBtn.dataset.title)
+        : activeStretchTitle;
+      targetLabel.textContent = `TARGET: ${displayName}`;
     }
-    const ys = visPts.map(pt => pt.y);
-    const bodySpanY = Math.max(...ys) - Math.min(...ys);
-    if (bodySpanY < 0.35) {
-      return { ok: false, msg: "📏 距離鏡頭太遠：請往前靠近約 1.5～2 公尺，讓身體佔畫面約 50%～75%" };
+
+    if (jointReadout && activeDbRule?.target && activeDbRule?.comparator) {
+      const curText = jointReadout.textContent || "";
+      const angleMatch = curText.match(/Angle:\s*([^|]+)/i);
+      const anglePart = angleMatch ? angleMatch[1].trim() : "--°";
+      jointReadout.innerText = `Angle: ${anglePart} | Target: ${activeDbRule.comparator}${activeDbRule.target}°`;
     }
-    if (Math.min(...ys) < 0.03 || Math.max(...ys) > 0.97) {
-      return { ok: false, msg: "📐 部分身體超出畫面邊緣：請微調距離，確保頭部與雙腳完整入鏡" };
+
+    if (feedbackSubtext && !isAiSessionActive && !lastDetectedLandmarks) {
+      const nextTip = getFeedbackTip();
+      if (nextTip && feedbackSubtext.innerText !== nextTip) {
+        feedbackSubtext.innerText = nextTip;
+      }
     }
-    return { ok: true, msg: "" };
+
+    window.renderPnfGuideList();
+    window.renderPnfStepper();
+    window.updatePnfUI();
+  }
+
+  function schedulePnfSync() {
+    applyPnfLang();
+    requestAnimationFrame(() => applyPnfLang());
+    setTimeout(() => applyPnfLang(), 50);
+  }
+
+  function wrapApplyLanguageWhenReady() {
+    if (typeof window.applyLanguage === "function" && !window.applyLanguage.__pnfWrapped) {
+      const prev = window.applyLanguage;
+      const wrapped = function (lang) {
+        if (typeof lang === "string" && lang.length > 0) {
+          window.currentLang = lang;
+        }
+        const res = prev.apply(this, arguments);
+        schedulePnfSync();
+        return res;
+      };
+      wrapped.__pnfWrapped = true;
+      window.applyLanguage = wrapped;
+    }
+  }
+
+  wrapApplyLanguageWhenReady();
+  document.addEventListener("DOMContentLoaded", () => {
+    wrapApplyLanguageWhenReady();
+    schedulePnfSync();
+  });
+
+  document.addEventListener("click", (e) => {
+    const target = e.target.closest("button, [data-lang], #lang-toggle, .lang-toggle");
+    if (!target) return;
+    const txt = (target.textContent || "").trim().toUpperCase();
+    if (txt.includes("EN") || txt.includes("中文") || target.hasAttribute("data-lang")) {
+      setTimeout(() => schedulePnfSync(), 20);
+    }
+  });
+
+  const presetsScrollEl = document.getElementById("pnf-presets-scroll");
+  if (presetsScrollEl) {
+    presetsScrollEl.addEventListener("wheel", (e) => {
+      if (Math.abs(e.deltaY) > Math.abs(e.deltaX) && presetsScrollEl.scrollWidth > presetsScrollEl.clientWidth) {
+        presetsScrollEl.scrollLeft += e.deltaY;
+        e.preventDefault();
+      }
+    }, { passive: false });
   }
 
   async function ensureLandmarker() {
     if (poseLandmarker) return;
-    feedbackSubtext.innerText = "正在載入 AI 骨骼辨識模型...";
-    const vision = await FilesetResolver.forVisionTasks(
-      "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm"
-    );
+    const vision = await FilesetResolver.forVisionTasks("https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm");
     poseLandmarker = await PoseLandmarker.createFromOptions(vision, {
       baseOptions: {
         modelAssetPath: "https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/1/pose_landmarker_lite.task",
         delegate: "GPU"
       },
-      runningMode: runningMode,
+      runningMode,
       numPoses: 1
     });
   }
@@ -407,116 +577,133 @@
 
   function evaluateFrame(landmarks) {
     const rule = getCurrentRule();
-    const guideText = getActiveGuideText();
-    const combinedText = `${activeStretchTitle} ${guideText}`;
-
     const lPts = rule.left.map(i => landmarks[i]);
     const rPts = rule.right.map(i => landmarks[i]);
-    const lScore = lPts.reduce((s, p) => s + (p?.visibility || 0), 0);
-    const rScore = rPts.reduce((s, p) => s + (p?.visibility || 0), 0);
-    const pts = lScore >= rScore ? lPts : rPts;
+    const pts = (lPts.reduce((s, p) => s + (p?.visibility || 0), 0) >= rPts.reduce((s, p) => s + (p?.visibility || 0), 0)) ? lPts : rPts;
 
-    if (pts.some(p => !p || p.visibility < 0.6)) {
+    // Only check leg/kneeling visibility when the joint indices use knee (25/26) or ankle (27/28)
+    const usesLegJoints = [...rule.left, ...rule.right].some(idx => idx >= 25);
+
+    if (usesLegJoints) {
+      const hip = (landmarks[23]?.visibility || 0) >= (landmarks[24]?.visibility || 0) ? landmarks[23] : landmarks[24];
+      const knee = (landmarks[25]?.visibility || 0) >= (landmarks[26]?.visibility || 0) ? landmarks[25] : landmarks[26];
+
+      const hipValid = hip && (hip.visibility || 0) >= 0.65 && hip.y <= 0.95;
+      const kneeValid = knee && (knee.visibility || 0) >= 0.65 && knee.y <= 0.97;
+      const legLengthValid = hipValid && kneeValid && Math.abs(knee.y - hip.y) >= 0.10;
+
+      if (!hipValid || !kneeValid || !legLengthValid) {
+        jointReadout.innerText = `Angle: --° | Target: ${rule.comparator}${rule.target}°`;
+        return {
+          valid: false,
+          msg: isEnglishMode()
+            ? "Lower body / kneeling legs not visible in photo"
+            : "照片未拍到完整下肢／跪姿腿部，無法通過此動作檢測"
+        };
+      }
+    }
+
+    if (pts.some(p => !p || (p.visibility || 0) < 0.5)) {
       jointReadout.innerText = `Angle: --° | Target: ${rule.comparator}${rule.target}°`;
       return {
         valid: false,
-        msg: rule.requireLowerBody
-          ? "❌ 姿勢錯誤：此為下半身動作，請確保髖、膝、腳踝完整入鏡"
-          : "❌ 姿勢錯誤：未偵測到該動作所需的目標關節"
+        msg: isEnglishMode() ? "Target joints not clearly visible" : "未清晰偵測到目標關節"
       };
-    }
-
-    const hipAngle = calcAngle(landmarks[11], landmarks[23], landmarks[25]);
-    if ((combinedText.includes("坐姿") || combinedText.includes("仰臥")) && hipAngle > 155) {
-      jointReadout.innerText = `Wrong Posture (Standing) | Need Seated/Supine`;
-      return { valid: false, msg: `❌ 姿勢錯誤：指南要求「坐姿/仰臥」，但偵測到站立姿勢` };
-    }
-
-    if (rule.requireOverhead || combinedText.includes("高舉") || combinedText.includes("過頭")) {
-      const lArmRaise = calcAngle(landmarks[13], landmarks[11], landmarks[23]);
-      const rArmRaise = calcAngle(landmarks[14], landmarks[12], landmarks[24]);
-      const maxRaise = Math.max(lArmRaise, rArmRaise);
-      if (maxRaise < 135) {
-        jointReadout.innerText = `Arm Raise: ${maxRaise}° | Need >= 145°`;
-        return { valid: false, msg: `❌ 姿勢錯誤：指南要求「單手高舉過頭」，目前手臂僅抬高 ${maxRaise}°` };
-      }
-    }
-
-    if (rule.requireArmStraight || combinedText.includes("手臂伸直")) {
-      const lElbow = calcAngle(landmarks[11], landmarks[13], landmarks[15]);
-      const rElbow = calcAngle(landmarks[12], landmarks[14], landmarks[16]);
-      const bestElbow = lScore >= rScore ? lElbow : rElbow;
-      if (bestElbow < 155) {
-        jointReadout.innerText = `Elbow Angle: ${bestElbow}° | Need >= 158°`;
-        return { valid: false, msg: `❌ 姿勢錯誤：手臂必須完全伸直貼牆（目前手肘彎曲 ${bestElbow}°）` };
-      }
-    }
-
-    if (rule.requireKneeling || combinedText.includes("高跪")) {
-      const lKnee = calcAngle(landmarks[23], landmarks[25], landmarks[27]);
-      const rKnee = calcAngle(landmarks[24], landmarks[26], landmarks[28]);
-      if (lKnee > 140 && rKnee > 140) {
-        jointReadout.innerText = `Wrong Posture (Standing) | Need Kneeling`;
-        return { valid: false, msg: "❌ 姿勢錯誤：偵測到雙腿站立，此動作必須採「單膝跪地高跪姿」" };
-      }
     }
 
     const angle = calcAngle(pts[0], pts[1], pts[2]);
     jointReadout.innerText = `Angle: ${angle}° | Target: ${rule.comparator}${rule.target}°`;
-
     const passed = rule.comparator === ">=" ? (angle >= rule.target) : (angle <= rule.target);
 
-    const phaseText = (document.getElementById("pnf-phase-badge")?.innerText || "").toUpperCase();
-    const isPrep = phaseText.includes("PREP") || phaseText.includes("預備");
-    if (isPrep) {
-      const prepOk = rule.comparator === ">=" ? (angle >= rule.target - 12) : (angle <= rule.target + 12);
-      if (!prepOk) {
-        return { valid: false, msg: `❌ 預備姿勢錯誤：${rule.tip}（目前 ${angle}°）` };
-      }
-      return { valid: true, msg: `✅ 預備姿勢正確（${angle}°），準備進入拉伸` };
+    if (passed) {
+      return {
+        valid: true,
+        msg: isEnglishMode()
+          ? `Pose matched (${angle}°)${isAiSessionActive ? " · Timer active" : " · Click Start"}`
+          : `姿勢符合目標（${angle}°）${isAiSessionActive ? " · 計時進行中" : " · 請點擊開始訓練"}`
+      };
     }
 
-    if (passed) {
-      return { valid: true, msg: `🔥 姿勢正確並保持中（${angle}°），計時進行中！` };
-    } else {
-      return { valid: false, msg: `❌ 姿勢未達標 · 已暫停：${rule.tip}（目前 ${angle}°）` };
-    }
+    return {
+      valid: false,
+      msg: isEnglishMode()
+        ? `Incorrect pose (${angle}°, target ${rule.comparator}${rule.target}°)`
+        : `姿勢不符（目前 ${angle}°，需 ${rule.comparator}${rule.target}°）`
+    };
   }
 
   function updateUiHoldState(valid, msg) {
     const finalValid = Boolean(valid || isSimulatedHold);
     isPoseHeldValid = finalValid;
+    const isEn = isEnglishMode();
     feedbackSubtext.innerText = msg;
 
     if (finalValid) {
-      holdDot.className = "w-2 h-2 rounded-full bg-emerald-400 animate-ping shrink-0";
-      holdStatusText.innerText = "HOLDING · 計時進行中";
+      holdDot.className = isAiSessionActive
+        ? "w-2 h-2 rounded-full bg-emerald-400 animate-ping shrink-0"
+        : "w-2 h-2 rounded-full bg-emerald-400 shrink-0";
+      holdStatusText.innerText = isAiSessionActive
+        ? (isEn ? "HOLDING · TIMER ACTIVE" : "HOLDING · 計時進行中")
+        : (isEn ? "POSE MATCHED · STANDBY" : "姿勢達標 · 待命（點擊開始）");
       holdBadge.className = "px-2.5 py-1 rounded-full text-[10px] sm:text-xs font-bold bg-emerald-950/90 text-emerald-400 border border-emerald-500/50 backdrop-blur-md flex items-center gap-1.5 truncate";
       viewportFrame.classList.remove("border-gray-800", "border-red-500/80");
       viewportFrame.classList.add("border-emerald-500/80");
     } else {
       holdDot.className = "w-2 h-2 rounded-full bg-red-500 shrink-0";
-      holdStatusText.innerText = "WRONG POSTURE · 計時暫停";
+      holdStatusText.innerText = isAiSessionActive
+        ? (isEn ? "WRONG POSTURE · PAUSED" : "WRONG POSTURE · 計時暫停")
+        : (isEn ? "INCORRECT POSE · NOT MATCHED" : "姿勢不符 · 未達標");
       holdBadge.className = "px-2.5 py-1 rounded-full text-[10px] sm:text-xs font-bold bg-red-950/90 text-red-400 border border-red-500/60 backdrop-blur-md flex items-center gap-1.5 truncate";
       viewportFrame.classList.remove("border-gray-800", "border-emerald-500/80");
       viewportFrame.classList.add("border-red-500/80");
     }
   }
 
+  window.addEventListener("DOMContentLoaded", () => {
+    const outerPresetHandler = window.handlePnfPresetClick;
+    window.handlePnfPresetClick = async function (button) {
+      wrapApplyLanguageWhenReady();
+      if (!button) return;
+
+      document.querySelectorAll("#module-pnf .pnf-preset-btn").forEach((b) => {
+        b.classList.remove("active-preset", "bg-goldAccent/20", "text-goldAccent", "border-goldAccent/50");
+        b.classList.add("bg-[#171923]", "text-gray-300", "border-gray-700/80");
+      });
+      button.classList.remove("bg-[#171923]", "text-gray-300", "border-gray-700/80");
+      button.classList.add("active-preset", "bg-goldAccent/20", "text-goldAccent", "border-goldAccent/50");
+
+      currentStepIdx = 0;
+      syncStepsFromButton(button);
+
+      if (typeof window.resetPnfTimer === "function") {
+        window.resetPnfTimer();
+      } else if (typeof outerPresetHandler === "function") {
+        outerPresetHandler(button);
+        if (typeof window.pausePnfTimer === "function") window.pausePnfTimer();
+      }
+
+      isAiSessionActive = false;
+      isSimulatedHold = false;
+      isPoseHeldValid = false;
+
+      syncStepsFromButton(button);
+      resetHoldHudToStandby();
+      schedulePnfSync();
+      await reEvaluateCurrentMedia();
+    };
+  });
+
   function renderPhotoLandmarks(lm, isValid) {
-    lastPhotoValid = isValid;
     const boxW = viewportFrame.clientWidth || 640;
     const boxH = viewportFrame.clientHeight || 360;
     canvas.width = boxW;
     canvas.height = boxH;
     ctx.clearRect(0, 0, boxW, boxH);
-
     if (!photoImg.naturalWidth || !photoImg.naturalHeight) return;
 
     const imgRatio = photoImg.naturalWidth / photoImg.naturalHeight;
     const boxRatio = boxW / boxH;
     let drawW = boxW, drawH = boxH, offX = 0, offY = 0;
-
     if (imgRatio > boxRatio) {
       drawH = boxW / imgRatio;
       offY = (boxH - drawH) / 2;
@@ -525,53 +712,53 @@
       offX = (boxW - drawW) / 2;
     }
 
-    const mapped = lm.map(pt => ({
-      ...pt,
-      x: (offX + pt.x * drawW) / boxW,
-      y: (offY + pt.y * drawH) / boxH
-    }));
-
+    const mapped = lm.map(pt => ({ ...pt, x: (offX + pt.x * drawW) / boxW, y: (offY + pt.y * drawH) / boxH }));
     const drawingUtils = new DrawingUtils(ctx);
-    drawingUtils.drawConnectors(mapped, PoseLandmarker.POSE_CONNECTIONS, {
-      color: isValid ? "#10B981" : "#EF4444",
-      lineWidth: 3
-    });
+    drawingUtils.drawConnectors(mapped, PoseLandmarker.POSE_CONNECTIONS, { color: isValid ? "#10B981" : "#EF4444", lineWidth: 3 });
     drawingUtils.drawLandmarks(mapped, { color: "#FFFFFF", radius: 4 });
   }
 
-  if (typeof ResizeObserver !== "undefined") {
-    const ro = new ResizeObserver(() => {
-      if (!photoImg.classList.contains("hidden") && lastDetectedLandmarks) {
-        renderPhotoLandmarks(lastDetectedLandmarks, lastPhotoValid);
-      }
-    });
-    ro.observe(viewportFrame);
+  async function reEvaluateCurrentMedia() {
+    const isPhotoVisible = photoImg && !photoImg.classList.contains("hidden") && photoImg.src && photoImg.src.startsWith("data:image");
+    if (!isPhotoVisible) return;
+
+    await ensureLandmarker();
+    if (runningMode !== "IMAGE") {
+      await poseLandmarker.setOptions({ runningMode: "IMAGE" });
+      runningMode = "IMAGE";
+    }
+    const results = poseLandmarker.detect(photoImg);
+    if (results.landmarks && results.landmarks.length > 0) {
+      const lm = results.landmarks[0];
+      lastDetectedLandmarks = lm;
+      const res = evaluateFrame(lm);
+      renderPhotoLandmarks(lm, res.valid);
+      updateUiHoldState(res.valid, res.msg);
+    } else {
+      lastDetectedLandmarks = null;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      updateUiHoldState(false, isEnglishMode() ? "Target joints not visible" : "未偵測到目標關節");
+    }
   }
 
   function videoDetectLoop() {
     if (!webcamStream) return;
     const drawingUtils = new DrawingUtils(ctx);
     const results = poseLandmarker.detectForVideo(video, performance.now());
-
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     if (results.landmarks && results.landmarks.length > 0) {
       const lm = results.landmarks[0];
       lastDetectedLandmarks = lm;
-      const framing = checkLiveFraming(lm);
       const res = evaluateFrame(lm);
-      const effectiveValid = framing.ok && res.valid;
-      const effectiveMsg = !framing.ok ? framing.msg : res.msg;
-      const color = (effectiveValid || isSimulatedHold) ? "#10B981" : "#EF4444";
-
+      const color = (res.valid || isSimulatedHold) ? "#10B981" : "#EF4444";
       drawingUtils.drawConnectors(lm, PoseLandmarker.POSE_CONNECTIONS, { color, lineWidth: 4 });
       drawingUtils.drawLandmarks(lm, { color: "#FFFFFF", radius: 4 });
-      updateUiHoldState(effectiveValid, effectiveMsg);
+      updateUiHoldState(res.valid, res.msg);
     } else {
       lastDetectedLandmarks = null;
-      updateUiHoldState(false, "❌ 未偵測到全身：請站入鏡頭畫面內，並保持光線充足");
+      updateUiHoldState(false, isEnglishMode() ? "Full body not detected" : "未偵測到全身");
     }
-
     animId = requestAnimationFrame(videoDetectLoop);
   }
 
@@ -592,7 +779,6 @@
         };
       }
     } catch (e) {
-      feedbackSubtext.innerText = "⚠️ 無法存取攝影機，請使用 Photo Test 上傳照片或點擊右側模擬鈕";
       btnSimulate.classList.remove("hidden");
     }
   }
@@ -610,12 +796,10 @@
   window.switchPnfAiSource = async function (source) {
     if (source === "cam") {
       isSimulatedHold = false;
-      btnSimulate.innerText = "模擬動作達標";
+      lastDetectedLandmarks = null;
       photoImg.classList.add("hidden");
       video.classList.remove("hidden");
       canvas.classList.add("-scale-x-100");
-      document.getElementById("ai-btn-cam").className = "min-h-[32px] px-2.5 py-1 rounded-lg text-[11px] font-bold bg-indigo-600 hover:bg-indigo-500 text-white transition inline-flex items-center gap-1";
-      document.getElementById("ai-btn-photo").className = "min-h-[32px] cursor-pointer px-2.5 py-1 rounded-lg text-[11px] font-bold bg-[#1b1e2b] hover:bg-gray-700 text-gray-200 border border-gray-700 transition inline-flex items-center gap-1";
       await startCamera();
     }
   };
@@ -623,46 +807,19 @@
   photoInput.addEventListener("change", (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
-
     isSimulatedHold = false;
-    btnSimulate.innerText = "模擬動作達標";
     btnSimulate.classList.add("hidden");
-
     stopCamera();
     video.classList.add("hidden");
     photoImg.classList.remove("hidden");
     canvas.classList.remove("-scale-x-100");
-    document.getElementById("ai-btn-cam").className = "min-h-[32px] px-2.5 py-1 rounded-lg text-[11px] font-bold bg-[#1b1e2b] hover:bg-gray-700 text-gray-200 border border-gray-700 transition inline-flex items-center gap-1";
-    document.getElementById("ai-btn-photo").className = "min-h-[32px] cursor-pointer px-2.5 py-1 rounded-lg text-[11px] font-bold bg-indigo-600 hover:bg-indigo-500 text-white transition inline-flex items-center gap-1";
-    feedbackSubtext.innerText = `正在讀取照片「${file.name}」並載入 AI 模型...`;
 
     const reader = new FileReader();
     reader.onload = async (event) => {
       try {
         photoImg.src = event.target.result;
         await photoImg.decode();
-
-        await ensureLandmarker();
-        if (runningMode !== "IMAGE") {
-          await poseLandmarker.setOptions({ runningMode: "IMAGE" });
-          runningMode = "IMAGE";
-        }
-
-        const results = poseLandmarker.detect(photoImg);
-        if (results.landmarks && results.landmarks.length > 0) {
-          const lm = results.landmarks[0];
-          lastDetectedLandmarks = lm;
-          const res = evaluateFrame(lm);
-          renderPhotoLandmarks(lm, res.valid);
-          updateUiHoldState(res.valid, res.msg);
-        } else {
-          lastDetectedLandmarks = null;
-          ctx.clearRect(0, 0, canvas.width, canvas.height);
-          updateUiHoldState(false, "❌ 照片中未偵測到人體骨架，請換一張光線充足的全身照");
-        }
-      } catch (err) {
-        console.error("Photo Test 辨識失敗:", err);
-        updateUiHoldState(false, `❌ 照片分析錯誤：${err.message}`);
+        await reEvaluateCurrentMedia();
       } finally {
         photoInput.value = "";
       }
@@ -672,39 +829,33 @@
 
   window.toggleSimulatePoseHold = function () {
     isSimulatedHold = !isSimulatedHold;
-    btnSimulate.innerText = isSimulatedHold ? "取消模擬" : "模擬動作達標";
-    updateUiHoldState(isSimulatedHold, isSimulatedHold ? "✅ 模擬動作保持中，計時正常運行" : "❌ 已暫停模擬");
+    updateUiHoldState(isSimulatedHold, isSimulatedHold ? "Simulation active" : "Simulation paused");
   };
 
   const origSetInterval = window.setInterval;
   window.setInterval = function (fn, delay, ...args) {
     if (delay === 1000 && typeof fn === "function") {
-      const wrappedFn = function () {
-        if (!photoImg.classList.contains("hidden") && lastDetectedLandmarks) {
-          const res = evaluateFrame(lastDetectedLandmarks);
-          renderPhotoLandmarks(lastDetectedLandmarks, res.valid);
-          updateUiHoldState(res.valid, res.msg);
-        }
-
-        if (isAiSessionActive && !isPoseHeldValid && !isSimulatedHold) {
-          return;
-        }
+      return origSetInterval.call(window, function () {
+        if (!isAiSessionActive) return;
+        if (!isPoseHeldValid && !isSimulatedHold) return;
         return fn.apply(this, arguments);
-      };
-      return origSetInterval.call(window, wrappedFn, delay, ...args);
+      }, delay, ...args);
     }
     return origSetInterval.call(window, fn, delay, ...args);
   };
 
   const origStart = window.startPnfTimer;
-  window.startPnfTimer = function () {
+  window.startPnfTimer = async function () {
     isAiSessionActive = true;
-    if (photoImg.classList.contains("hidden")) {
-      startCamera();
-    } else if (lastDetectedLandmarks) {
-      const res = evaluateFrame(lastDetectedLandmarks);
-      renderPhotoLandmarks(lastDetectedLandmarks, res.valid);
-      updateUiHoldState(res.valid, res.msg);
+    const btnStart = document.getElementById("pnf-btn-start");
+    const btnPause = document.getElementById("pnf-btn-pause");
+    if (btnStart) btnStart.disabled = true;
+    if (btnPause) btnPause.disabled = false;
+
+    if (!photoImg.classList.contains("hidden")) {
+      await reEvaluateCurrentMedia();
+    } else {
+      await startCamera();
     }
     if (typeof origStart === "function") origStart();
   };
@@ -712,53 +863,25 @@
   const origPause = window.pausePnfTimer;
   window.pausePnfTimer = function () {
     isAiSessionActive = false;
+    const btnStart = document.getElementById("pnf-btn-start");
+    const btnPause = document.getElementById("pnf-btn-pause");
+    if (btnStart) btnStart.disabled = false;
+    if (btnPause) btnPause.disabled = true;
     if (typeof origPause === "function") origPause();
+    updateUiHoldState(false, isEnglishMode() ? "Session paused" : "已暫停計時");
   };
 
   const origReset = window.resetPnfTimer;
   window.resetPnfTimer = function () {
-    isAiSessionActive = false;
-    isSimulatedHold = false;
-    stopCamera();
-    holdDot.className = "w-2 h-2 rounded-full bg-gray-400 shrink-0";
-    holdStatusText.innerText = "AI Standby (Click Start)";
-    holdBadge.className = "px-2.5 py-1 rounded-full text-[10px] sm:text-xs font-bold bg-black/85 text-gray-200 border border-gray-700/90 backdrop-blur-md flex items-center gap-1.5 truncate";
-    viewportFrame.className = "relative z-10 w-full pnf-media-box bg-[#050609] rounded-2xl overflow-hidden border border-gray-800 flex items-center justify-center shadow-inner transition-colors duration-300";
+    currentStepIdx = 0;
     if (typeof origReset === "function") origReset();
+    resetHoldHudToStandby();
+    schedulePnfSync();
   };
 
-  const origPresetClick = window.handlePnfPresetClick;
-  window.handlePnfPresetClick = function (btn) {
-    activeStretchTitle = btn.dataset.title || "";
-    activeDbRule = btn.dataset.aiRules ? JSON.parse(btn.dataset.aiRules) : null;
-
-    if (targetLabel && activeStretchTitle) {
-      targetLabel.innerText = `TARGET: ${activeStretchTitle}`;
-    }
-
-    const rule = getCurrentRule();
-    jointReadout.innerText = `Angle: --° | Target: ${rule.comparator}${rule.target}°`;
-    feedbackSubtext.innerText = `已切換動作規則：${rule.tip}`;
-
-    if (typeof origPresetClick === "function") origPresetClick(btn);
-
-    if (!photoImg.classList.contains("hidden") && lastDetectedLandmarks) {
-      const res = evaluateFrame(lastDetectedLandmarks);
-      renderPhotoLandmarks(lastDetectedLandmarks, res.valid);
-      updateUiHoldState(res.valid, res.msg);
-    }
-  };
-
-  // 處理從 Posture Lab 一鍵跳轉過來的指定動作（支援「推牆」與「壁面」互通）
-  function consumePreferredStretch() {
-    const preferred = localStorage.getItem("preferred_pnf_stretch");
-    if (!preferred) return;
-    const matchedBtn = findPresetButtonByTitle(preferred);
-    if (matchedBtn) {
-      window.handlePnfPresetClick(matchedBtn);
-    }
-    localStorage.removeItem("preferred_pnf_stretch");
+  if (activePresetBtn) {
+    syncStepsFromButton(activePresetBtn);
   }
-
-  setTimeout(consumePreferredStretch, 120);
+  resetHoldHudToStandby();
+  schedulePnfSync();
 </script>

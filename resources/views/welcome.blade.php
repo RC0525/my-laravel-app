@@ -4,11 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Flex & Form - PNF Stretching & TUT Web Prototype</title>
-  <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <!-- Google Fonts - Inter -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -53,58 +50,78 @@
 
   <!-- Header / Navigation Bar -->
   <header class="sticky top-0 z-50 glass-card border-b border-gray-800/80 px-4 lg:px-8 py-3">
-    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-goldAccent to-brownRich flex items-center justify-center text-black font-extrabold text-xl shadow-lg shadow-goldAccent/20">
-          <i class="fa-solid fa-bolt"></i>
-        </div>
-        <div>
-          <div class="flex items-center gap-2">
-            <h1 class="text-xl font-bold tracking-tight text-white">Flex <span class="text-goldAccent">&amp;</span> Form</h1>
-            <span class="text-[10px] uppercase font-bold tracking-widest px-2 py-0.5 rounded bg-goldAccent/20 text-goldAccent border border-goldAccent/30">Prototype v1.0</span>
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3">
+      <div class="flex items-center justify-between w-full md:w-auto gap-3">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-goldAccent to-brownRich flex items-center justify-center text-black font-extrabold text-xl shadow-lg shadow-goldAccent/20">
+            <i class="fa-solid fa-bolt"></i>
           </div>
-          <p class="text-xs text-gray-400">PNF Stretching, TUT Cadence &amp; Posture Correction Assistant</p>
+          <div>
+            <div class="flex items-center gap-2">
+              <h1 class="text-xl font-bold tracking-tight text-white">Flex <span class="text-goldAccent">&amp;</span> Form</h1>
+              <span class="text-[10px] uppercase font-bold tracking-widest px-2 py-0.5 rounded bg-goldAccent/20 text-goldAccent border border-goldAccent/30">Prototype v1.0</span>
+            </div>
+            <p class="text-xs text-gray-400" data-i18n="header.tagline">PNF Stretching, TUT Cadence &amp; Posture Correction Assistant</p>
+          </div>
+        </div>
+
+        <!-- Mobile Language & Audio Controls -->
+        <div class="flex md:hidden items-center gap-2">
+          <button type="button" onclick="toggleLanguage()" class="px-2.5 py-1.5 rounded-lg bg-cardDark border border-goldAccent/40 text-xs font-bold text-goldAccent">
+            <span class="lang-label">中文 / EN</span>
+          </button>
+          <button type="button" onclick="toggleMute()" class="px-2.5 py-1.5 rounded-lg bg-cardDark border border-gray-700/60 text-xs text-goldAccent">
+            <i class="fa-solid fa-volume-high audio-icon-el"></i>
+          </button>
         </div>
       </div>
 
       <!-- Navigation Tabs -->
       <nav class="flex items-center gap-1 bg-surfaceDark p-1.5 rounded-xl border border-gray-800/80 overflow-x-auto max-w-full">
-        <button id="tab-btn-pnf" onclick="switchTab('pnf')" class="tab-btn active-tab flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 bg-goldAccent text-black shadow-md">
-          <i class="fa-solid fa-stopwatch"></i> PNF Assistant
+        <button id="tab-btn-pnf" type="button" onclick="switchTab('pnf')" class="tab-btn active-tab flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 bg-goldAccent text-black shadow-md whitespace-nowrap">
+          <i class="fa-solid fa-stopwatch"></i> <span data-i18n="nav.pnf">PNF Assistant</span>
         </button>
-        <button id="tab-btn-tut" onclick="switchTab('tut')" class="tab-btn flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold text-gray-400 hover:text-white hover:bg-cardDark transition-all duration-200">
-          <i class="fa-solid fa-dumbbell"></i> TUT Timer
+        <button id="tab-btn-tut" type="button" onclick="switchTab('tut')" class="tab-btn flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold text-gray-400 hover:text-white hover:bg-cardDark transition-all duration-200 whitespace-nowrap">
+          <i class="fa-solid fa-dumbbell"></i> <span data-i18n="nav.tut">TUT Timer</span>
         </button>
-        <button id="tab-btn-posture" onclick="switchTab('posture')" class="tab-btn flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold text-gray-400 hover:text-white hover:bg-cardDark transition-all duration-200">
-          <i class="fa-solid fa-child-reaching"></i> Posture
+        <button id="tab-btn-posture" type="button" onclick="switchTab('posture')" class="tab-btn flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold text-gray-400 hover:text-white hover:bg-cardDark transition-all duration-200 whitespace-nowrap">
+          <i class="fa-solid fa-child-reaching"></i> <span data-i18n="nav.posture">Posture</span>
         </button>
-        
-        <a href="/ai-assessment" id="tab-btn-ai" class="tab-btn flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold text-gray-400 hover:text-white hover:bg-cardDark transition-all duration-200">
-          <i class="fa-solid fa-chart-line"></i> AI Assessment
+        <button id="tab-btn-analytics" type="button" onclick="switchTab('analytics')" class="tab-btn flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold text-gray-400 hover:text-white hover:bg-cardDark transition-all duration-200 whitespace-nowrap">
+          <i class="fa-solid fa-chart-line"></i> <span data-i18n="nav.analytics">Analytics &amp; SUS</span>
+        </button>
+        <a href="/ai-assessment" id="tab-btn-ai" class="tab-btn flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold text-gray-400 hover:text-white hover:bg-cardDark transition-all duration-200 whitespace-nowrap">
+          <i class="fa-solid fa-robot"></i> <span data-i18n="nav.ai">AI Assessment</span>
         </a>
       </nav>
 
-      <div class="hidden md:flex items-center gap-3">
-        <button id="audio-toggle-btn" onclick="toggleMute()" class="px-3 py-1.5 rounded-lg bg-cardDark hover:bg-gray-800 border border-gray-700/60 text-xs font-medium flex items-center gap-2 text-goldAccent transition">
-          <i id="audio-icon" class="fa-solid fa-volume-high"></i>
-          <span id="audio-status-text">Audio On</span>
+      <!-- Desktop Language & Audio Controls -->
+      <div class="hidden md:flex items-center gap-2">
+        <button id="lang-toggle-btn" type="button" onclick="toggleLanguage()" class="px-3 py-1.5 rounded-lg bg-cardDark hover:bg-gray-800 border border-goldAccent/40 text-xs font-bold flex items-center gap-1.5 text-goldAccent transition">
+          <i class="fa-solid fa-language"></i>
+          <span class="lang-label">中文 / EN</span>
+        </button>
+        <button id="audio-toggle-btn" type="button" onclick="toggleMute()" class="px-3 py-1.5 rounded-lg bg-cardDark hover:bg-gray-800 border border-gray-700/60 text-xs font-medium flex items-center gap-2 text-goldAccent transition">
+          <i id="audio-icon" class="fa-solid fa-volume-high audio-icon-el"></i>
+          <span id="audio-status-text" data-i18n="audio.on">Audio On</span>
         </button>
       </div>
     </div>
   </header>
 
-  <!-- Main Content Area: 引入 4 個子頁面 -->
+  <!-- Main Content Area -->
   <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 space-y-6">
-    @include('partials.pnf')
-    @include('partials.tut')
-    @include('partials.posture')
+    @includeIf('partials.pnf')
+    @includeIf('partials.tut')
+    @includeIf('partials.posture')
+    @includeIf('partials.analytics')
   </main>
 
   <!-- Footer -->
   <footer class="glass-card border-t border-gray-800/80 py-4 px-6 text-center text-xs text-gray-500">
     <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
-      <p>© 2026 Flex &amp; Form Academic Web Prototype. Designed for Integrated Study SEHS4510.</p>
-      <p class="text-gray-400">Software Evaluation &amp; Prototyping Research Project</p>
+      <p data-i18n="footer.copy">© 2026 Flex &amp; Form Academic Web Prototype. Designed for Integrated Study SEHS4510.</p>
+      <p class="text-gray-400" data-i18n="footer.sub">Software Evaluation &amp; Prototyping Research Project</p>
     </div>
   </footer>
 
@@ -115,14 +132,14 @@
         <span id="modal-category" class="text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded bg-goldAccent/20 text-goldAccent">
           Posture Correction
         </span>
-        <button onclick="closeExerciseModal()" class="text-gray-400 hover:text-white text-lg">
+        <button type="button" onclick="closeExerciseModal()" class="text-gray-400 hover:text-white text-lg">
           <i class="fa-solid fa-xmark"></i>
         </button>
       </div>
 
       <div>
         <h3 id="modal-exercise-title" class="text-xl font-bold text-white">Exercise Title</h3>
-        <p class="text-xs text-gray-400 mt-1">Maintain continuous contraction &amp; proper alignment</p>
+        <p class="text-xs text-gray-400 mt-1" data-i18n="modal.hint">Maintain continuous contraction &amp; proper alignment</p>
       </div>
 
       <div class="w-36 h-36 rounded-full bg-surfaceDark border-4 border-goldAccent mx-auto flex items-center justify-center">
@@ -130,10 +147,10 @@
       </div>
 
       <div class="flex items-center justify-center gap-3 pt-2">
-        <button id="modal-btn-start" onclick="startModalExerciseTimer()" class="py-2.5 px-5 rounded-xl font-bold text-xs bg-goldAccent text-black hover:bg-goldHover transition">
-          <i class="fa-solid fa-play mr-1"></i> Start
+        <button id="modal-btn-start" type="button" onclick="startModalExerciseTimer()" class="py-2.5 px-5 rounded-xl font-bold text-xs bg-goldAccent text-black hover:bg-goldHover transition">
+          <i class="fa-solid fa-play mr-1"></i> <span data-i18n="modal.start">Start</span>
         </button>
-        <button onclick="closeExerciseModal()" class="py-2.5 px-5 rounded-xl font-bold text-xs bg-gray-800 text-gray-300 hover:bg-gray-700 transition">
+        <button type="button" onclick="closeExerciseModal()" class="py-2.5 px-5 rounded-xl font-bold text-xs bg-gray-800 text-gray-300 hover:bg-gray-700 transition" data-i18n="modal.close">
           Done / Close
         </button>
       </div>
@@ -142,6 +159,73 @@
 
   <!-- JavaScript Logic -->
   <script>
+    const I18N_DICT = {
+      zh: {
+        "header.tagline": "PNF 伸展、TUT 節奏與體態矯正輔助系統",
+        "nav.pnf": "PNF 伸展助手",
+        "nav.tut": "TUT 節奏計時",
+        "nav.posture": "體態矯正庫",
+        "nav.analytics": "數據與 SUS 量表",
+        "nav.ai": "AI 體態實驗室",
+        "audio.on": "語音開啟",
+        "audio.muted": "已靜音",
+        "footer.copy": "© 2026 Flex & Form 學術網頁原型 · SEHS4510 專題研究",
+        "footer.sub": "軟體評估與原型設計研究專案",
+        "modal.hint": "維持穩定收縮與正確關節排列",
+        "modal.start": "開始",
+        "modal.close": "完成 / 關閉"
+      },
+      en: {
+        "header.tagline": "PNF Stretching, TUT Cadence & Posture Correction Assistant",
+        "nav.pnf": "PNF Assistant",
+        "nav.tut": "TUT Timer",
+        "nav.posture": "Posture",
+        "nav.analytics": "Analytics & SUS",
+        "nav.ai": "AI Assessment",
+        "audio.on": "Audio On",
+        "audio.muted": "Muted",
+        "footer.copy": "© 2026 Flex & Form Academic Web Prototype. Designed for Integrated Study SEHS4510.",
+        "footer.sub": "Software Evaluation & Prototyping Research Project",
+        "modal.hint": "Maintain continuous contraction & proper alignment",
+        "modal.start": "Start",
+        "modal.close": "Done / Close"
+      }
+    };
+
+    window.currentLang = localStorage.getItem("flexform_lang") || "zh";
+
+    window.applyLanguage = function (lang) {
+      window.currentLang = (lang === "en") ? "en" : "zh";
+      localStorage.setItem("flexform_lang", window.currentLang);
+      document.documentElement.lang = window.currentLang === "en" ? "en" : "zh-Hant";
+
+      const dict = I18N_DICT[window.currentLang] || I18N_DICT.zh;
+      document.querySelectorAll("[data-i18n]").forEach((el) => {
+        const key = el.getAttribute("data-i18n");
+        if (dict[key]) el.textContent = dict[key];
+      });
+
+      document.querySelectorAll(".lang-label").forEach((el) => {
+        el.textContent = window.currentLang === "en" ? "EN / 中文" : "中文 / EN";
+      });
+
+      const audioText = document.getElementById("audio-status-text");
+      if (audioText) {
+        audioText.textContent = isMuted ? dict["audio.muted"] : dict["audio.on"];
+      }
+
+      if (typeof renderPnfGuideList === "function" && typeof pnfActiveSteps !== "undefined" && pnfActiveSteps.length) {
+        renderPnfGuideList();
+        updatePnfUI();
+      }
+      if (typeof updateTutUI === "function") updateTutUI();
+      if (typeof window.rerenderSusWithCurrentLang === "function") window.rerenderSusWithCurrentLang();
+    };
+
+    window.toggleLanguage = function () {
+      window.applyLanguage(window.currentLang === "zh" ? "en" : "zh");
+    };
+
     let isMuted = false;
     let totalPnfCyclesCompleted = 0;
     let totalTutRepsCompleted = 0;
@@ -158,16 +242,13 @@
 
     function toggleMute() {
       isMuted = !isMuted;
-      const btnIcon = document.getElementById('audio-icon');
+      const dict = I18N_DICT[window.currentLang] || I18N_DICT.zh;
       const btnText = document.getElementById('audio-status-text');
-      if (isMuted) {
-        btnIcon.className = 'fa-solid fa-volume-xmark';
-        btnText.textContent = 'Muted';
-      } else {
-        btnIcon.className = 'fa-solid fa-volume-high';
-        btnText.textContent = 'Audio On';
-        speakCue("Audio enabled");
-      }
+      document.querySelectorAll('.audio-icon-el').forEach(icon => {
+        icon.className = isMuted ? 'fa-solid fa-volume-xmark audio-icon-el' : 'fa-solid fa-volume-high audio-icon-el';
+      });
+      if (btnText) btnText.textContent = isMuted ? dict["audio.muted"] : dict["audio.on"];
+      if (!isMuted) speakCue(window.currentLang === "en" ? "Audio enabled" : "語音已開啟");
     }
 
     setInterval(() => {
@@ -175,27 +256,31 @@
         activeSecondsLogged++;
         const mins = Math.floor(activeSecondsLogged / 60);
         const secs = activeSecondsLogged % 60;
-        document.getElementById('stat-active-time').textContent = `${mins}m ${secs}s`;
+        const el = document.getElementById('stat-active-time');
+        if (el) el.textContent = `${mins}m ${secs}s`;
       }
     }, 1000);
 
     function switchTab(tabId) {
-  document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-  document.querySelectorAll('.tab-btn').forEach(btn => {
-    btn.className = 'tab-btn flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold text-gray-400 hover:text-white hover:bg-cardDark transition-all duration-200';
-  });
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.className = 'tab-btn flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold text-gray-400 hover:text-white hover:bg-cardDark transition-all duration-200 whitespace-nowrap';
+      });
 
-  document.getElementById(`module-${tabId}`).classList.remove('hidden');
-  const activeBtn = document.getElementById(`tab-btn-${tabId}`);
-  activeBtn.className = 'tab-btn active-tab flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 bg-goldAccent text-black shadow-md';
+      const targetSection = document.getElementById(`module-${tabId}`);
+      if (targetSection) targetSection.classList.remove('hidden');
 
-  // 新增：切換至 AI 分頁時自動開啟鏡頭，切換至其他分頁時自動關閉以節省資源
-  if (tabId === 'ai') {
-    if (window.startAiCamera) window.startAiCamera();
-  } else {
-    if (window.stopAiCamera) window.stopAiCamera();
-  }
-}
+      const activeBtn = document.getElementById(`tab-btn-${tabId}`);
+      if (activeBtn) {
+        activeBtn.className = 'tab-btn active-tab flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 bg-goldAccent text-black shadow-md whitespace-nowrap';
+      }
+
+      if (tabId === 'ai') {
+        if (window.startAiCamera) window.startAiCamera();
+      } else {
+        if (window.stopAiCamera) window.stopAiCamera();
+      }
+    }
 
     function handlePostureCardClick(button) {
       const title = button.dataset.title;
@@ -204,7 +289,7 @@
       openExerciseModal(title, duration, categoryName);
     }
 
-    /* MODULE 1: PNF STRETCHING TIMER LOGIC (DB Synchronized) */
+    /* MODULE 1: PNF STRETCHING TIMER LOGIC */
     let pnfActiveSteps = [];
     let pnfPhaseIndex = 0;
     let pnfTimeRemaining = 10;
@@ -227,15 +312,16 @@
     function selectPnfRoutine(routineName, steps) {
       pnfCurrentRoutineName = routineName;
       pnfActiveSteps = steps && steps.length > 0 ? steps : [
-        { step_number: 1, step_name_zh: '預備動作', duration_seconds: 10, instruction: '設定預備姿勢' },
-        { step_number: 2, step_name_zh: '初次拉伸', duration_seconds: 10, instruction: '維持輕微張力' },
-        { step_number: 3, step_name_zh: '等長收縮', duration_seconds: 6, instruction: '發力推抵門框' },
-        { step_number: 4, step_name_zh: '短暫放鬆', duration_seconds: 3, instruction: '完全放鬆肌肉' },
-        { step_number: 5, step_name_zh: '二次推進', duration_seconds: 15, instruction: '深入新伸展終點' },
-        { step_number: 6, step_name_zh: '復位放鬆', duration_seconds: 5, instruction: '緩慢收回放鬆' }
+        { step_number: 1, step_name_zh: '預備動作', step_name_en: 'Prep', duration_seconds: 10, instruction: '設定預備姿勢', instruction_en: 'Set starting posture' },
+        { step_number: 2, step_name_zh: '初次拉伸', step_name_en: 'Initial Stretch', duration_seconds: 10, instruction: '維持輕微張力', instruction_en: 'Hold gentle stretch' },
+        { step_number: 3, step_name_zh: '等長收縮', step_name_en: 'Isometric Hold', duration_seconds: 6, instruction: '發力推抵門框', instruction_en: 'Contract against resistance' },
+        { step_number: 4, step_name_zh: '短暫放鬆', step_name_en: 'Relax', duration_seconds: 3, instruction: '完全放鬆肌肉', instruction_en: 'Relax muscle completely' },
+        { step_number: 5, step_name_zh: '二次推進', step_name_en: 'Deep Stretch', duration_seconds: 15, instruction: '深入新伸展終點', instruction_en: 'Advance into deeper stretch' },
+        { step_number: 6, step_name_zh: '復位放鬆', step_name_en: 'Recovery', duration_seconds: 5, instruction: '緩慢收回放鬆', instruction_en: 'Return slowly and relax' }
       ];
 
-      document.getElementById('pnf-target-label').textContent = `Target: ${routineName}`;
+      const targetLabel = document.getElementById('pnf-target-label');
+      if (targetLabel) targetLabel.textContent = `Target: ${routineName}`;
       renderPnfGuideList();
       renderPnfStepper();
       resetPnfTimer();
@@ -243,13 +329,17 @@
 
     function renderPnfGuideList() {
       const guideContainer = document.getElementById('pnf-guide-steps-list');
+      if (!guideContainer) return;
       guideContainer.innerHTML = '';
+      const isEn = window.currentLang === 'en';
       pnfActiveSteps.forEach(step => {
+        const stepName = isEn ? (step.step_name_en || step.step_name_zh) : step.step_name_zh;
+        const stepDesc = isEn ? (step.instruction_en || step.instruction) : step.instruction;
         const item = document.createElement('div');
         item.className = 'p-3 rounded-xl bg-surfaceDark border border-gray-800/80';
         item.innerHTML = `
-          <span class="font-bold text-goldAccent block mb-0.5">Step ${step.step_number}: ${step.step_name_zh} (${step.duration_seconds}s)</span>
-          <span class="text-gray-300">${step.instruction}</span>
+          <span class="font-bold text-goldAccent block mb-0.5">Step ${step.step_number}: ${stepName} (${step.duration_seconds}s)</span>
+          <span class="text-gray-300">${stepDesc}</span>
         `;
         guideContainer.appendChild(item);
       });
@@ -257,14 +347,17 @@
 
     function renderPnfStepper() {
       const container = document.getElementById('pnf-stepper-container');
+      if (!container) return;
       container.innerHTML = '';
+      const isEn = window.currentLang === 'en';
       pnfActiveSteps.forEach((step, idx) => {
+        const stepName = isEn ? (step.step_name_en || step.step_name_zh) : step.step_name_zh;
         const div = document.createElement('div');
         div.id = `pnf-step-box-${idx}`;
         div.className = 'p-2 rounded-xl bg-cardDark border border-gray-800 text-gray-400 transition-all duration-300';
         div.innerHTML = `
           <p class="text-[9px] font-bold uppercase tracking-wider">Step ${step.step_number}</p>
-          <p class="text-[11px] font-semibold font-mono truncate">${step.step_name_zh}</p>
+          <p class="text-[11px] font-semibold font-mono truncate">${stepName}</p>
         `;
         container.appendChild(div);
       });
@@ -273,14 +366,23 @@
     function updatePnfUI() {
       if (pnfActiveSteps.length === 0) return;
       const step = pnfActiveSteps[pnfPhaseIndex];
-      document.getElementById('pnf-phase-badge').textContent = `STEP ${step.step_number}: ${step.step_name_zh}`;
-      document.getElementById('pnf-timer-digits').textContent = pnfTimeRemaining;
-      document.getElementById('pnf-instruction-text').textContent = step.instruction;
+      const isEn = window.currentLang === 'en';
+      const stepName = isEn ? (step.step_name_en || step.step_name_zh) : step.step_name_zh;
+      const stepDesc = isEn ? (step.instruction_en || step.instruction) : step.instruction;
+
+      const phaseBadge = document.getElementById('pnf-phase-badge');
+      const timerDigits = document.getElementById('pnf-timer-digits');
+      const instText = document.getElementById('pnf-instruction-text');
+      if (phaseBadge) phaseBadge.textContent = `STEP ${step.step_number}: ${stepName}`;
+      if (timerDigits) timerDigits.textContent = pnfTimeRemaining;
+      if (instText) instText.textContent = stepDesc;
 
       const circle = document.getElementById('pnf-progress-circle');
-      const maxDuration = step.duration_seconds || 10;
-      const strokeDashoffset = 326.72 - (pnfTimeRemaining / maxDuration) * 326.72;
-      circle.style.strokeDashoffset = strokeDashoffset;
+      if (circle) {
+        const maxDuration = step.duration_seconds || 10;
+        const strokeDashoffset = 326.72 - (pnfTimeRemaining / maxDuration) * 326.72;
+        circle.style.strokeDashoffset = strokeDashoffset;
+      }
 
       pnfActiveSteps.forEach((_, idx) => {
         const el = document.getElementById(`pnf-step-box-${idx}`);
@@ -315,9 +417,13 @@
     function pausePnfTimer() {
       clearInterval(pnfTimerInterval);
       pnfTimerInterval = null;
-      document.getElementById('pnf-btn-start').disabled = false;
-      document.getElementById('pnf-btn-start').classList.remove('opacity-50');
-      document.getElementById('pnf-btn-pause').disabled = true;
+      const startBtn = document.getElementById('pnf-btn-start');
+      const pauseBtn = document.getElementById('pnf-btn-pause');
+      if (startBtn) {
+        startBtn.disabled = false;
+        startBtn.classList.remove('opacity-50');
+      }
+      if (pauseBtn) pauseBtn.disabled = true;
     }
 
     function resetPnfTimer() {
@@ -325,7 +431,8 @@
       pnfPhaseIndex = 0;
       pnfTimeRemaining = pnfActiveSteps[0] ? pnfActiveSteps[0].duration_seconds : 10;
       pnfCycle = 1;
-      document.getElementById('pnf-cycle-count').textContent = pnfCycle;
+      const cycleEl = document.getElementById('pnf-cycle-count');
+      if (cycleEl) cycleEl.textContent = pnfCycle;
       updatePnfUI();
     }
 
@@ -340,7 +447,8 @@
         pnfPhaseIndex = 0;
         pnfCycle++;
         totalPnfCyclesCompleted++;
-        document.getElementById('stat-pnf-cycles').textContent = totalPnfCyclesCompleted;
+        const statEl = document.getElementById('stat-pnf-cycles');
+        if (statEl) statEl.textContent = totalPnfCyclesCompleted;
         logActivity(`Completed PNF Cycle (${pnfCurrentRoutineName})`);
 
         if (pnfCycle > 3) {
@@ -349,7 +457,8 @@
           alert("Great job! You completed all 3 PNF stretch cycles.");
           return;
         }
-        document.getElementById('pnf-cycle-count').textContent = pnfCycle;
+        const cycleEl = document.getElementById('pnf-cycle-count');
+        if (cycleEl) cycleEl.textContent = pnfCycle;
       }
       pnfTimeRemaining = pnfActiveSteps[pnfPhaseIndex].duration_seconds;
       updatePnfUI();
@@ -377,28 +486,39 @@
     }
 
     function updateTutFromInputs() {
-      const e = parseInt(document.getElementById('tut-input-e').value) || 1;
+      const eEl = document.getElementById('tut-input-e');
+      if (!eEl) return;
+      const e = parseInt(eEl.value) || 1;
       const p1 = parseInt(document.getElementById('tut-input-p1').value) || 0;
       const c = parseInt(document.getElementById('tut-input-c').value) || 1;
       const p2 = parseInt(document.getElementById('tut-input-p2').value) || 0;
       tutTempo = [e, p1, c, p2];
 
       const totalDuration = e + p1 + c + p2;
-      document.getElementById('tut-rep-duration').textContent = `${totalDuration.toFixed(1)} seconds`;
+      const durEl = document.getElementById('tut-rep-duration');
+      if (durEl) durEl.textContent = `${totalDuration.toFixed(1)} seconds`;
       resetTutTimer();
     }
 
     function updateTutUI() {
-      const stageLabels = ['ECCENTRIC (LOWERING)', 'BOTTOM PAUSE', 'CONCENTRIC (LIFTING)', 'TOP HOLD'];
+      const badge = document.getElementById('tut-phase-badge');
+      const digits = document.getElementById('tut-seconds-display');
+      const bar = document.getElementById('tut-rhythm-bar');
+      if (!badge || !digits || !bar) return;
+
+      const isEn = window.currentLang === 'en';
+      const stageLabels = isEn
+        ? ['ECCENTRIC (LOWERING)', 'BOTTOM PAUSE', 'CONCENTRIC (LIFTING)', 'TOP HOLD']
+        : ['離心下放 (ECCENTRIC)', '底部停頓 (PAUSE)', '向心收縮 (CONCENTRIC)', '頂部停頓 (HOLD)'];
       const stageBadgeBg = ['bg-goldAccent/20 text-goldAccent', 'bg-amber-500/20 text-amber-400', 'bg-emerald-500/20 text-emeraldSuccess', 'bg-cyan-500/20 text-cyanAccent'];
 
-      document.getElementById('tut-phase-badge').textContent = stageLabels[tutCurrentStage];
-      document.getElementById('tut-phase-badge').className = `px-3 py-1 rounded-full text-xs font-extrabold tracking-widest uppercase border border-gray-700 ${stageBadgeBg[tutCurrentStage]}`;
-      document.getElementById('tut-seconds-display').textContent = tutStageTime;
+      badge.textContent = stageLabels[tutCurrentStage];
+      badge.className = `px-3 py-1 rounded-full text-xs font-extrabold tracking-widest uppercase border border-gray-700 ${stageBadgeBg[tutCurrentStage]}`;
+      digits.textContent = tutStageTime;
 
       const stageMax = tutTempo[tutCurrentStage] || 1;
       const barPercent = Math.min(100, Math.max(0, ((stageMax - tutStageTime) / stageMax) * 100));
-      document.getElementById('tut-rhythm-bar').style.width = `${barPercent}%`;
+      bar.style.width = `${barPercent}%`;
     }
 
     function startTutTimer() {
@@ -422,8 +542,10 @@
     function pauseTutTimer() {
       clearInterval(tutTimerInterval);
       tutTimerInterval = null;
-      document.getElementById('tut-btn-start').disabled = false;
-      document.getElementById('tut-btn-pause').disabled = true;
+      const startBtn = document.getElementById('tut-btn-start');
+      const pauseBtn = document.getElementById('tut-btn-pause');
+      if (startBtn) startBtn.disabled = false;
+      if (pauseBtn) pauseBtn.disabled = true;
     }
 
     function resetTutTimer() {
@@ -431,7 +553,8 @@
       tutCurrentStage = 0;
       tutStageTime = tutTempo[0];
       tutRepsCompleted = 0;
-      document.getElementById('tut-current-reps').textContent = 0;
+      const repsEl = document.getElementById('tut-current-reps');
+      if (repsEl) repsEl.textContent = 0;
       updateTutUI();
     }
 
@@ -441,8 +564,10 @@
         tutCurrentStage = 0;
         tutRepsCompleted++;
         totalTutRepsCompleted++;
-        document.getElementById('tut-current-reps').textContent = tutRepsCompleted;
-        document.getElementById('stat-tut-reps').textContent = totalTutRepsCompleted;
+        const repsEl = document.getElementById('tut-current-reps');
+        if (repsEl) repsEl.textContent = tutRepsCompleted;
+        const statEl = document.getElementById('stat-tut-reps');
+        if (statEl) statEl.textContent = totalTutRepsCompleted;
         logActivity(`Completed TUT Repetition #${tutRepsCompleted}`);
 
         const targetReps = parseInt(document.getElementById('tut-target-reps').value) || 10;
@@ -468,17 +593,12 @@
 
     /* MODULE 3: POSTURAL CORRECTION GUIDANCE */
     function filterPostureCategory(cat, btnElement) {
-      // 移除所有按鈕的 active 樣式
       document.querySelectorAll('.posture-filter-btn').forEach(btn => {
         btn.className = 'posture-filter-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-cardDark text-gray-300 border border-gray-700 hover:bg-gray-800 transition';
       });
-      
-      // 為當前點擊的按鈕加上高亮樣式
       if (btnElement) {
         btnElement.className = 'posture-filter-btn active-filter px-3 py-1.5 rounded-lg text-xs font-bold bg-goldAccent text-black shadow transition';
       }
-
-      // 根據分類顯示或隱藏對應的卡片
       document.querySelectorAll('.posture-card').forEach(card => {
         if (cat === 'all' || card.dataset.category === cat) {
           card.classList.remove('hidden');
@@ -525,6 +645,7 @@
     /* MODULE 4: ANALYTICS & SUS SURVEY ENGINE */
     function logActivity(text) {
       const list = document.getElementById('activity-log-list');
+      if (!list) return;
       if (list.querySelector('.italic')) list.innerHTML = '';
 
       const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
@@ -534,31 +655,31 @@
       list.prepend(item);
     }
 
-    const SUS_QUESTIONS = [
-      "I think that I would like to use this Web App frequently.",
-      "I found the Web App unnecessarily complex.",
-      "I thought the Web App was easy to use.",
-      "I think that I would need the support of a technical person to be able to use this Web App.",
-      "I found the various functions in this Web App were well integrated.",
-      "I thought there was too much inconsistency in this Web App.",
-      "I would imagine that most people would learn to use this Web App very quickly.",
-      "I found the Web App very cumbersome to use.",
-      "I felt very confident using the Web App.",
-      "I needed to learn a lot of things before I could get going with this Web App."
-    ];
-
-    
-
-    
-
-    window.onload = function() {
-      const firstPreset = document.querySelector('.pnf-preset-btn');
-      if (firstPreset) {
-        handlePnfPresetClick(firstPreset);
+    function initApp() {
+      try {
+        switchTab('pnf');
+        const firstPreset = document.querySelector('.pnf-preset-btn');
+        if (firstPreset) {
+          handlePnfPresetClick(firstPreset);
+        } else {
+          selectPnfRoutine('胸大肌門框 PNF 拉伸', []);
+        }
+        updateTutFromInputs();
+        if (typeof renderSusQuestions === 'function') {
+          renderSusQuestions();
+          calculateSusScore();
+        }
+        window.applyLanguage(window.currentLang || 'zh');
+      } catch (err) {
+        console.error('Init error:', err);
       }
-      updateTutFromInputs();
-      populateSusQuestions();
-    };
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initApp);
+    } else {
+      initApp();
+    }
   </script>
 </body>
 </html>
