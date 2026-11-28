@@ -108,21 +108,21 @@
 
   const ANALYTICS_I18N = {
     zh: {
-      "analytics.title": "Training Analytics & System Usability Scale (SUS)",
+      "analytics.title": "訓練數據分析與系統易用性量表 (SUS)",
       "analytics.subtitle": "即時追蹤 PNF 伸展週期、TUT 次數與訓練時長，並提供標準 10 題 SUS 自評及問卷入口。",
       "analytics.survey_btn": "前往填寫問卷",
-      "analytics.active_time": "Active Training Time",
-      "analytics.live_timer": "Live session timer",
-      "analytics.pnf_cycles": "PNF Cycles Completed",
-      "analytics.hold_relax": "Hold-Relax cycles",
-      "analytics.tut_reps": "TUT Reps Completed",
-      "analytics.tempo_reps": "Controlled tempo reps",
-      "analytics.sus_score_label": "Current SUS Score",
-      "analytics.sus_heading": "Interactive SUS Questionnaire (1 = 非常不同意 ~ 5 = 非常同意)",
+      "analytics.active_time": "累計訓練時間",
+      "analytics.live_timer": "即時訓練計時器",
+      "analytics.pnf_cycles": "已完成 PNF 週期",
+      "analytics.hold_relax": "Hold-Relax 循環次數",
+      "analytics.tut_reps": "已完成 TUT 次數",
+      "analytics.tempo_reps": "張力下控制次數",
+      "analytics.sus_score_label": "目前 SUS 總分",
+      "analytics.sus_heading": "互動式 SUS 易用性問卷（1 = 非常不同意 ~ 5 = 非常同意）",
       "analytics.reset_btn": "重設",
-      "analytics.submit_btn": "Submit SUS",
-      "analytics.log_title": "Session Activity Log",
-      "analytics.log_empty": "No completed sessions logged yet. Start a PNF or TUT session!",
+      "analytics.submit_btn": "送出 SUS",
+      "analytics.log_title": "訓練活動紀錄",
+      "analytics.log_empty": "尚未有已完成的訓練紀錄，請先開始 PNF 或 TUT 訓練！",
       "analytics.ref_title": "SUS 評分標準參考",
       "analytics.ref_body": "平均基準為 68 分；達到 80.3 分以上屬於 Grade A（優秀易用性）。正式受測數據請透過上方問卷連結提交。"
     },
@@ -187,20 +187,15 @@
     return vals;
   }
 
-  function renderSusQuestions() {
+  window.renderSusQuestions = function () {
     const container = document.getElementById("sus-questions-container");
     if (!container) return;
 
     const currentVals = getSavedSusValues();
     const isEn = detectAnalyticsLang() === "en";
-    const questions = isEn
-      ? SUS_QUESTIONS_EN
-      : ((typeof SUS_QUESTIONS !== "undefined" && Array.isArray(SUS_QUESTIONS) && SUS_QUESTIONS.length === 10)
-          ? SUS_QUESTIONS.map(q => q.replace(/^\d+\.\s*/, ""))
-          : SUS_QUESTIONS_ZH);
+    const questions = isEn ? SUS_QUESTIONS_EN : SUS_QUESTIONS_ZH;
 
     container.innerHTML = "";
-
     questions.forEach((text, idx) => {
       const activeVal = currentVals[idx];
       const row = document.createElement("div");
@@ -223,9 +218,9 @@
       row.innerHTML = `<span class="text-gray-200 leading-snug">${idx + 1}. ${text}</span>${radiosHtml}`;
       container.appendChild(row);
     });
-  }
+  };
 
-  function applyAnalyticsLang() {
+  window.applyAnalyticsLang = function () {
     const lang = detectAnalyticsLang();
     const dict = ANALYTICS_I18N[lang];
 
@@ -238,12 +233,12 @@
     if (feedback && !feedback.dataset.submitted) {
       feedback.innerHTML = lang === "en"
         ? `Select ratings (1–5) and click <strong class="text-goldAccent">Submit SUS</strong> to update your score.`
-        : `選擇 1～5 分後點擊 <strong class="text-goldAccent">Submit SUS</strong> 送出並更新分數。`;
+        : `選擇 1～5 分後點擊 <strong class="text-goldAccent">送出 SUS</strong> 更新分數。`;
     }
 
-    renderSusQuestions();
+    window.renderSusQuestions();
     window.calculateSusScore();
-  }
+  };
 
   window.calculateSusScore = function () {
     let totalPoints = 0;
@@ -276,7 +271,7 @@
   };
 
   window.submitSusEvaluation = function () {
-    const score = window.calculateSusScore ? window.calculateSusScore() : "0.0";
+    const score = window.calculateSusScore();
     const feedback = document.getElementById("sus-submit-feedback");
     const isEn = detectAnalyticsLang() === "en";
     if (feedback) {
@@ -297,7 +292,7 @@
       const radio = document.querySelector(`input[name="sus_q_${i}"][value="${targetVal}"]`);
       if (radio) radio.checked = true;
     }
-    if (window.calculateSusScore) window.calculateSusScore();
+    window.calculateSusScore();
     const feedback = document.getElementById("sus-submit-feedback");
     const isEn = detectAnalyticsLang() === "en";
     if (feedback) {
@@ -305,23 +300,35 @@
       feedback.className = "text-xs text-gray-400";
       feedback.innerHTML = isEn
         ? `Reset to defaults. Click <strong class="text-goldAccent">Submit SUS</strong> to record.`
-        : `已重設為預設選項，點擊 <strong class="text-goldAccent">Submit SUS</strong> 送出。`;
+        : `已重設為預設選項，點擊 <strong class="text-goldAccent">送出 SUS</strong> 更新分數。`;
     }
   };
 
-  renderSusQuestions();
-  window.calculateSusScore();
+  function wrapGlobalApplyLangForAnalytics() {
+    if (typeof window.applyLanguage === "function" && !window.applyLanguage.__analyticsWrapped) {
+      const prev = window.applyLanguage;
+      const wrapped = function (lang) {
+        if (typeof lang === "string" && lang.length > 0) window.currentLang = lang;
+        const res = prev.apply(this, arguments);
+        window.applyAnalyticsLang();
+        return res;
+      };
+      wrapped.__analyticsWrapped = true;
+      window.applyLanguage = wrapped;
+    }
+  }
+
+  window.applyAnalyticsLang();
+  wrapGlobalApplyLangForAnalytics();
 
   document.addEventListener("DOMContentLoaded", () => {
-    applyAnalyticsLang();
+    wrapGlobalApplyLangForAnalytics();
+    window.applyAnalyticsLang();
   });
 
   document.addEventListener("click", (e) => {
     const target = e.target.closest("button, [data-lang], #lang-toggle, .lang-toggle");
     if (!target) return;
-    const txt = (target.textContent || "").trim().toUpperCase();
-    if (txt.includes("EN") || txt.includes("中文") || target.hasAttribute("data-lang")) {
-      setTimeout(() => applyAnalyticsLang(), 25);
-    }
+    setTimeout(() => window.applyAnalyticsLang(), 30);
   });
 </script>
